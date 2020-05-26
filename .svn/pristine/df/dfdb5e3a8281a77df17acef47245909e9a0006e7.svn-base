@@ -1,0 +1,84 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<title></title>
+</head>
+<body>
+	<%@include file="/WEB-INF/inc/top_menu.jsp"%>
+	<div class="container">
+		<c:forEach var="vo" items="${list}" varStatus="st">
+			<table class="grid table table-bordered table-striped hover ">
+				<tr class="text-center">
+					<td rowspan="3">
+						<img	src="${vo.packagePic}"
+						alt="" width="100">
+						
+					</td>
+					<td>패키지: ${vo.packageId}</td>
+					<td>평점: ${vo.packageGrade}</td>
+					<td rowspan="3">
+						가격 : <fmt:formatNumber value="${vo.adultPrice}" pattern="#,###"/>
+					</td>
+					<td rowspan="3">
+						<a href="tProdList.do?packageId=${vo.packageId}">상세보기</a>
+					</td>
+				</tr>
+				<tr class="text-center">
+					<td colspan="2"><a href="tProdList.do?packageId=${vo.packageId}">이름:${vo.packageName} </a> </td>
+				</tr>
+				<tr class="text-center">
+					<td colspan="2">
+						여행기간: ${vo.packageDepPeriod1} ~ ${vo.packageDepPeriod2} 
+					</td>
+				</tr>
+			</table>
+		</c:forEach>
+	
+	
+	
+	<nav>
+		<ul class="pagination">
+			<li>
+				<!-- 이전 페이지 -->
+				<a href="tPackList.do?curPage=${(searchVO.firstPage ne 1) ? searchVO.firstPage-1 : 1}" aria-label="Previous">
+	        <span aria-hidden="true">&larr;</span>
+	      </a>
+      </li>
+			<li>
+				<!-- 이전 페이지 하나씩-->
+				<a href="tPackList.do?curPage=${searchVO.curPage>1 ? searchVO.curPage-1 : 1}" aria-label="Previous">
+	        <span aria-hidden="true">&laquo;</span>
+	      </a>
+      </li>
+      		<!-- 페이지 넘버링 -->
+			<c:forEach var="i" begin="${searchVO.firstPage}" end="${searchVO.lastPage}">
+				<c:if test="${searchVO.curPage==i}">
+					<li class="active"><a href="#" class="alink">${i}</a>
+				</c:if>
+				<c:if test="${searchVO.curPage ne i}">
+					<li><a href="#"  class="alink" data-page="${i}" onclick="f_goPage(${i})">${i}</a>
+				</c:if>
+			</c:forEach>
+			<li>
+			<!-- 다음 페이지 하나씩 -->
+	      <a href="tPackList.do?curPage=${searchVO.curPage<searchVO.totalPageCount?(searchVO.curPage+1):searchVO.totalPageCount}" aria-label="Next">
+	        <span aria-hidden="true">&raquo;</span>
+	      </a>
+    	</li>
+    	<li>
+    		<!-- 이전 페이지 -->
+	      <a href="freeList.wow?curPage=${searchVO.lastPage<searchVO.totalPageCount?(searchVO.lastPage+1):searchVO.totalPageCount}" aria-label="Next">
+	        <span aria-hidden="true">&rarr;</span>
+	      </a>
+    	</li>
+		</ul>
+	
+	
+</nav>
+</div>	<!-- 컨테이너div -->
+</body>
+</html>

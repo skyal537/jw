@@ -1,0 +1,56 @@
+package com.study.post.vo;
+
+//쪽지
+public class PostVO {
+
+    private int postId;
+
+    private String postContent;
+
+    private String postTitle;
+
+    private String memIdSend;
+
+    private String memIdArrv;
+
+    public int getPostId() {
+        return postId;
+    }
+
+    public void setPostId(int postId) {
+        this.postId = postId;
+    }
+
+    public String getPostContent() {
+        return postContent;
+    }
+
+    public void setPostContent(String postContent) {
+        this.postContent = postContent;
+    }
+
+    public String getPostTitle() {
+        return postTitle;
+    }
+
+    public void setPostTitle(String postTitle) {
+        this.postTitle = postTitle;
+    }
+
+    public String getMemIdSend() {
+        return memIdSend;
+    }
+
+    public void setMemIdSend(String memIdSend) {
+        this.memIdSend = memIdSend;
+    }
+
+    public String getMemIdArrv() {
+        return memIdArrv;
+    }
+
+    public void setMemIdArrv(String memIdArrv) {
+        this.memIdArrv = memIdArrv;
+    }
+
+}

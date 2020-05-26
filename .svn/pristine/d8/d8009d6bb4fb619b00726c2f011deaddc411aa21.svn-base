@@ -1,0 +1,115 @@
+package com.study.res.vo;
+
+//예약
+public class ReserveVO {
+
+    private String resId;
+
+    private String payYn;
+
+    private String productId;
+
+    private String memId;
+
+    private String cancelYn;
+
+    private int resPeople;
+
+    private int resPrice;
+
+    private String field;
+
+    private String resDate;
+
+    private int account;
+
+    private String accountBank;
+
+    public String getResId() {
+        return resId;
+    }
+
+    public void setResId(String resId) {
+        this.resId = resId;
+    }
+
+    public String getPayYn() {
+        return payYn;
+    }
+
+    public void setPayYn(String payYn) {
+        this.payYn = payYn;
+    }
+
+    public String getProductId() {
+        return productId;
+    }
+
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
+
+    public String getMemId() {
+        return memId;
+    }
+
+    public void setMemId(String memId) {
+        this.memId = memId;
+    }
+
+    public String getCancelYn() {
+        return cancelYn;
+    }
+
+    public void setCancelYn(String cancelYn) {
+        this.cancelYn = cancelYn;
+    }
+
+    public int getResPeople() {
+        return resPeople;
+    }
+
+    public void setResPeople(int resPeople) {
+        this.resPeople = resPeople;
+    }
+
+    public int getResPrice() {
+        return resPrice;
+    }
+
+    public void setResPrice(int resPrice) {
+        this.resPrice = resPrice;
+    }
+
+    public String getField() {
+        return field;
+    }
+
+    public void setField(String field) {
+        this.field = field;
+    }
+
+    public String getResDate() {
+        return resDate;
+    }
+
+    public void setResDate(String resDate) {
+        this.resDate = resDate;
+    }
+
+    public int getAccount() {
+        return account;
+    }
+
+    public void setAccount(int account) {
+        this.account = account;
+    }
+
+    public String getAccountBank() {
+        return accountBank;
+    }
+
+    public void setAccountBank(String accountBank) {
+        this.accountBank = accountBank;
+    }
+}

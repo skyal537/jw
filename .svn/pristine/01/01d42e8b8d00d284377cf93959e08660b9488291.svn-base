@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <!-- freBoardMapper.xml -->
+  	<!-- name는 해당 인터페이스 완전한 이름을 사용 -->
+  	
+  	
+  	<mapper namespace="com.study.tour.dao.ITourDao">
+  	
+  		<select id="getPackCount"
+  							parameterType="com.study.tour.vo.PackSearchVO" 
+  							resultType="int">
+  					SELECT count(*) 
+						FROM  t_package
+						where view_yn = 'Y'
+  					
+  			</select>
+  	
+  			<select id="getPackageList"
+  							parameterType="com.study.tour.vo.PackSearchVO" 
+  							resultType="com.study.tour.vo.PackageVO">
+  					<include refid="common.PRE_PAGING_QRY"/>
+  					select * from t_package
+  					<include refid="common.POST_PAGING_QRY"/>
+  					
+  			</select>
+  			
+  			<select id="getProdList"
+  							parameterType="String" 
+  							resultType="com.study.tour.vo.ProductVO">
+  					select * 
+  					from t_product
+  					where package_Id = #{packageId}
+  					 
+  						
+  			</select>
+  			
+  			<select id="getProduct"
+  							parameterType="String" 
+  							resultType="com.study.tour.vo.ProductVO">
+  					select * 
+  					from t_product
+  					where product_Id = #{productId}
+  						and rownum=1
+  					 
+  						
+  			</select>
+  	</mapper>
+  	
+  	
+  	
+  	

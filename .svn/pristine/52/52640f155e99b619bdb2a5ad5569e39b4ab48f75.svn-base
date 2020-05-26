@@ -1,0 +1,72 @@
+package com.study.member.web;
+
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.study.member.service.IMemberService;
+import com.study.member.vo.MemberSearchVO;
+import com.study.member.vo.MemberVO;
+
+@Controller
+@RequestMapping("/member")
+public class MemberController {
+
+	@Autowired
+	private IMemberService memberService;
+
+
+	@RequestMapping("/memberMgList.do")
+	public String memberMgList(@ModelAttribute("searchVO") MemberSearchVO searchVO, ModelMap model) {
+
+		List<MemberVO> list =  memberService.getMemberMgList(searchVO);
+
+		model.addAttribute("list", list);
+
+		return "member/memberMgList";
+	}
+
+	@RequestMapping(value = "/memberView.do")
+	public String memberView() {
+		return null;
+	}
+
+	@RequestMapping(value = "/memberEdit.do")
+	public String memberEdit() {
+		return null;
+	}
+
+	@RequestMapping(value = "/memberModify.do")
+	public String memberModify() {
+		return null;
+	}
+
+	@RequestMapping(value = "/memberForm.do")
+	public String memberForm() {
+		return null;
+	}
+
+	@RequestMapping(value = "/memberRegist.do")
+	public String memberRegist() {
+		return null;
+	}
+
+	@RequestMapping(value = "/memberDelete.do")
+	public String memberDelete() {
+		return null;
+	}
+
+	// 멤버 권한 변경/수정
+	@RequestMapping(value = "/memberAuthModify.do")
+	public String memberAuthModify() {
+		return null;
+	}
+
+
+
+}

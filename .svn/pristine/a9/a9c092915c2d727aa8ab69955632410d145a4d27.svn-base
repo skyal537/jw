@@ -1,0 +1,31 @@
+package com.study.tour.dao;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import com.study.tour.vo.PackSearchVO;
+import com.study.tour.vo.PackageVO;
+import com.study.tour.vo.ProductVO;
+
+@Mapper
+public interface ITourDao {
+	public List<PackageVO> getPackageList(PackSearchVO searchVO);
+	public PackageVO getPackage(String packageId);
+	public int registPackage(PackageVO packageVO);
+	public int updatePackage(PackageVO packageVO);
+	public int removePackage(String packageId);
+	
+	public List<ProductVO> getProdList(String productId);
+	public ProductVO getProduct(String productId);
+	public int registProduct(ProductVO product);
+	public int updateProduct(ProductVO product);
+	public int removeProduct(String productId);
+	public int removeSelProduct(String[] prods);
+	public int getProdCount(String packageId);
+	public int getPackCount(PackSearchVO searchVO);
+	public int updatePackPeriod(String packageId);
+	
+	
+}

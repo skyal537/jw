@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <!-- freBoardMapper.xml -->
+  	<!-- name는 해당 인터페이스 완전한 이름을 사용 -->
+  	
+  	<mapper namespace="com.study.data.dao.IDataDao">
+  			<select id="getCityListByTour" parameterType="String" resultType="com.study.data.vo.CityVO">
+  					select *
+  					from city_collect
+  					where prod_id = #{code}
+  			</select>
+  			
+  			<select id="getAreaList" resultType="com.study.data.vo.AreaVO">
+  					select * 
+  					from area
+  			</select>
+  			
+  			<select id="getThemeList" resultType="com.study.data.vo.ThemeVO">
+  					select * 
+  					from theme
+  			</select>
+  			
+  			<select id="getPackPeriod" resultType="com.study.data.vo.PackPeriodVO">
+  							select * 
+  							from pack_period
+  			</select>
+  	</mapper>
+  	
+  	
+  	
+  	

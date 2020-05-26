@@ -1,0 +1,194 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<title></title>
+
+
+
+
+<script type="text/javascript">
+	
+	var f_goPage = function(page){
+		//e.preventDefault();	//이벤트 전파 방지(기존 서브밋 방지)
+		document.getElementById("id_curPage").value = page;
+		var f= document.forms["frm_free"];
+		console.log("fn_goPage Call", "")
+		f.action = "tPackList.do";
+		f.submit();
+	}
+	
+	function fn_goPage(e){
+		//e.preventDefault();	//이벤트 전파 방지(기존 서브밋 방지)
+		document.getElementById("id_curPage").value = this.dataset.page;
+		var f= document.forms["frm_pack"];
+		console.log("fn_goPage Call", this.dataset.page)
+		f.action = "tPackList.do";
+		f.submit();
+	}
+	
+	var f_submit_search = function(){
+		var f= document.forms["frm_pack"];
+		f.action = "tPackList.do";
+		f.curPage.value = 1;
+		console.log("fn_search Call", f.dataset.page)
+		f.submit();
+	}
+	
+	var f_submit_change = function(){
+		var f= document.forms["frm_pack"];
+		f.curPage.value = 1;
+		f.rowSizePerPage.value = this.value;
+		console.log("fn_change Call", "curPage",f.curPage.value,"rowSizePerPage",  f.dataset.page)
+		f.submit();
+	}
+	window.onload=function(){
+		document.forms["frm_pack"].addEventListener("submit", f_submit_search);
+		document.getElementById("id_rowSizePerPage").addEventListener("change", f_submit_change);
+		//document.querySelectorAll(".pagination li a[data-page]").forEach(obj =>{obj.addEventListener("click", f_goPage);})
+	}
+	
+	</script>
+
+
+
+
+
+
+
+
+
+
+</head>
+<body>
+	<%@include file="/WEB-INF/inc/top_menu.jsp"%>
+	<div class="container">
+		<div class="panel panel-default">
+	  <div class="panel-body">
+	  	<form action="tPackList.do" method="post" class="form-horizontal" name="frm_pack" id="frm_free">
+	  		<input id="id_curPage" name="curPage" value="${searchVO.curPage }" hidden="">
+	  		<input  name="rowSizePerPage" value="${searchVO.rowSizePerPage }" hidden="">
+			  <div class="form-group">
+			    <label for="id_searchType" class="col-sm-2 control-label">검색</label>
+			    <div class="col-sm-2">
+			    	<select id="id_searchType" name="searchType" class="form-control input-sm">
+			    		<option value="R" ${searchVO.searchType eq 'R' ? 'selected="selected"':"" }>여행이름</option>
+			    		<option value="P" ${searchVO.searchType eq 'P' ? 'selected="selected"':"" }>여행기간</option>
+			    	</select>
+			    </div>
+			    <div class="col-sm-2">	
+			      <input type="text" name="searchWord" class="form-control input-sm"  
+			      		value="${searchVO.searchWord }" placeholder="검색어" >			      
+			    </div>
+			    <label for="id_searchCategory" class="col-sm-2 control-label">분류</label>
+			    <div class="col-sm-2">
+			    	<select id="id_searchCategory" name="searchCategory" class="form-control input-sm">
+				    	<option value="">-- 지역 --</option>
+							<c:forEach items="${areaList}" var="vo">
+								<option value="${vo.areaCode}" ${(vo.areaCode eq searchVO.searchCategory)? 'selected="selected"':' ' }>${vo.area}</option>
+							</c:forEach>
+			    	</select>
+			    </div>
+			    	<div class="col-sm-2">
+			    	<select name="searchPeriod" class="form-control input-sm">
+				    	<option value="">-- 기간 --</option>
+							<c:forEach items="${periodList}" var="vo">
+								<option value="${vo.packagePeriod}" ${(vo.packagePeriod eq searchVO.searchPeriod)? 'selected="selected"':' ' }>${vo.packagePeriod}</option>
+							</c:forEach>
+			    	</select>
+			    </div>
+			  </div>
+			  <div class="form-group">
+			  	<div class="col-sm-2 col-sm-offset-10" >
+			  		<button type="submit" class="btn btn-sm btn-primary btn-block ">
+			  			<i class="fa fa-search" aria-hidden="true"></i>&nbsp;검색</button>
+			  	</div>
+			  </div>
+			 </form>
+	  </div>
+	</div>
+	
+	
+	
+	
+	
+	
+		<c:forEach var="vo" items="${list}" varStatus="st">
+			<table class="grid table table-bordered table-striped hover ">
+				<colgroup>
+					<col width="10%"/>
+					<col width=""/>
+					<col width="15%"/>
+					<col width="15%"/>
+				</colgroup>
+				<tr class="text-center">
+					<td rowspan="3">
+						<img	src="${vo.packagePic}"
+						alt="" width="150">
+						
+					</td>
+					<td>${vo.packageId}</td>
+					<td>평점:<c:forEach varStatus="status" begin="1" end="${vo.packageGrade}">★</c:forEach></td>
+					<td rowspan="3">
+						가격 : <fmt:formatNumber value="${vo.adultPrice}" pattern="#,###"/> 원
+					</td>
+				</tr>
+				<tr class="text-center">
+					<td colspan="2"><a href="tProdList.do?packageId=${vo.packageId}">${vo.packageName} </a> </td>
+				</tr>
+				<tr class="text-center">
+					<td >
+						여행기간: ${vo.packageDepPeriod1} ~ ${vo.packageDepPeriod2} 
+					</td>
+					<td>${vo.packagePeriod}</td>
+				</tr>
+			</table>
+		</c:forEach>
+	
+	
+	
+	<nav>
+		<ul class="pagination">
+			<li>
+				<!-- 이전 페이지 -->
+				<a href="tPackList.do?curPage=${(searchVO.firstPage ne 1) ? searchVO.firstPage-1 : 1}&searchWord=${searchVO.searchWord}&searchCategory=${searchVO.searchCategory}" aria-label="Previous">
+	        <span aria-hidden="true">&larr;</span>
+	      </a>
+      </li>
+			<li>
+				<!-- 이전 페이지 하나씩-->
+				<a href="tPackList.do?curPage=${searchVO.curPage>1 ? searchVO.curPage-1 : 1}&searchWord=${searchVO.searchWord}&searchCategory=${searchVO.searchCategory}" aria-label="Previous">
+	        <span aria-hidden="true">&laquo;</span>
+	      </a>
+      </li>
+      		<!-- 페이지 넘버링 -->
+			<c:forEach var="i" begin="${searchVO.firstPage}" end="${searchVO.lastPage}">
+				<c:if test="${searchVO.curPage==i}">
+					<li class="active"><a href="#" class="alink">${i}</a>
+				</c:if>
+				<c:if test="${searchVO.curPage ne i}">
+					<li><a href="#"  class="alink" data-page="${i}" onclick="f_goPage(${i})">${i}</a>
+				</c:if>
+			</c:forEach>
+			<li>
+			<!-- 다음 페이지 하나씩 -->
+	      <a href="tPackList.do?curPage=${searchVO.curPage<searchVO.totalPageCount?(searchVO.curPage+1):searchVO.totalPageCount}&searchWord=${searchVO.searchWord}&searchCategory=${searchVO.searchCategory}" aria-label="Next">
+	        <span aria-hidden="true">&raquo;</span>
+	      </a>
+    	</li>
+    	<li>
+    		<!-- 이전 페이지 -->
+	      <a href="tPackList.do?curPage=${searchVO.lastPage<searchVO.totalPageCount?(searchVO.lastPage+1):searchVO.totalPageCount}&searchWord=${searchVO.searchWord}&searchCategory=${searchVO.searchCategory}" aria-label="Next">
+	        <span aria-hidden="true">&rarr;</span>
+	      </a>
+    	</li>
+		</ul>
+	
+	
+</nav>
+</div>	<!-- 컨테이너div -->
+</body>
+</html>

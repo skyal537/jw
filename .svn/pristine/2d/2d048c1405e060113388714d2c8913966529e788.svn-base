@@ -1,0 +1,47 @@
+package com.study.calendar.web;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.study.calendar.service.ICalendarService;
+import com.study.calendar.vo.CalendarVO;
+
+@Controller
+@RequestMapping("/calendar")
+public class CalendarController {
+	
+	@Autowired
+	ICalendarService calendarService;
+	
+	@RequestMapping("/calList.do")
+	public String calList(ModelMap model,String packageId) {
+		
+		List<CalendarVO> calendar = calendarService.getCalendarList(packageId);
+		
+		model.addAttribute("list", calendar);
+		return "tour/tPackList.jsp";
+	}
+	
+	@RequestMapping("/calRegist.do")
+	public String calRegist(CalendarVO calendar) {
+		calendarService.registCalendar(calendar);
+		
+		return "";
+	}
+	
+	@RequestMapping("/calRemove.do")
+	public String calRemove(CalendarVO calendar) {
+		calendarService.removeCalendar(calendar);
+		return "";
+	}
+	
+	@RequestMapping("/calModify.do")
+	public String calModify(CalendarVO calendar) {
+		calendarService.updateCalendar(calendar);
+		return "";
+	}
+}

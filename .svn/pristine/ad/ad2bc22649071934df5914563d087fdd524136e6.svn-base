@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <!-- freBoardMapper.xml -->
+  	<!-- name는 해당 인터페이스 완전한 이름을 사용 -->
+  	
+  <mapper namespace="com.study.res.dao.IResDao">
+  		<!-- 	<select id="getResList"
+  							 parameterType="com.study.res.vo.ResSearchVO"
+  							 resultType="com.study.res.vo.ReserveVO">
+  				SELECT a.bo_num 
+					    , a.bo_title 
+					    , b.comm_nm as bo_category_nm
+					    , a.bo_writer 
+					    , TO_CHAR(a.bo_reg_date,'YYYY.MM.DD') AS bo_reg_date  
+					    , a.bo_hit
+					FROM  free_board a left join comm_code b 
+					    on (a.bo_category=b.comm_cd) 
+					WHERE a.bo_del_yn = 'N' 
+					ORDER by a.bo_num DESC
+					SELECT res_id
+								 ,pay_yn
+								 ,product_id
+								 ,mem_id
+								 ,cancel_yn
+								 ,res_people
+								 ,res_price
+								 ,res_claim
+								 ,res_date
+								 ,account
+								 ,account_bank		   
+					FROM reserve
+  			</select>
+   -->
+  <!-- 
+  			<select id="getTourInfo"
+  							 parameterType="com.study.res.vo.ResSearchVO"
+  							 resultType="com.study.res.vo.ReserveVO">
+					SELECT tourlist_id
+								 ,tourlist_kr_nm 		   
+								 ,tourlist_fst_nm 		   
+								 ,tourlist_lst_nm 		   
+								 ,res_id 		   
+								 ,tourlist_age 		   
+								 ,tourlist_hp 		   
+					FROM tourlist_info
+  			</select> -->
+  				 <select id="getResList" 
+  				 parameterType="com.study.res.vo.ResSearchVO"
+  				 	resultType="com.study.res.vo.ReserveVO">
+  						SELECT * FROM reserve
+  				</select>
+  			 
+  			 
+  		   <insert id="insertReserve"
+  			 	parameterType="com.study.res.vo.ReserveVO">
+  			 	<selectKey keyProperty="resId" resultType="String" order="BEFORE">
+  			 		SELECT TO_CHAR(sysdate, 'YYYYMMDD') || LPAD(SEQ_RES.NEXTVAL, 4, '0') FROM dual
+  			 	</selectKey>
+  			 	
+  	 			INSERT INTO reserve (
+									      res_id
+									    , pay_yn
+									    , product_id
+									    , mem_id
+									    , cancel_yn
+									    , res_people
+									    , res_price
+									    , req_claim
+									    , res_date
+									    , account
+									    , account_bank
+									) VALUES (
+									     #{resId}
+									    	,	'N' 
+									            ,  #{productId} 
+									    , #{memId}
+									    , 'N'
+											 , '1'
+											 , '1'
+										  , #{reqClaim}
+									    , sysdate
+									    , #{account}
+									    , #{accountBank}
+										)
+  				</insert>
+  				
+  				 <update id="updateReservePay">
+  				 				UPDATE reserve
+									SET
+									    pay_yn = #{payYn}
+									WHERE
+									 		res_id = #{resId}
+  				 		
+  				 
+  				 </update>
+  				
+  					<update id="updateReserveCancel">
+  					UPDATE reserve
+									SET
+									    cancel_yn = #{cancelYn}
+									WHERE
+									    res_id = #{resId}
+									   
+  					
+  					</update>   
+  		
+  	</mapper>
+  		
+  	
+  	
+  	

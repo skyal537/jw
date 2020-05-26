@@ -1,0 +1,8 @@
+package com.study.tour.vo;
+
+import com.study.common.vo.PagingVO;
+
+//여행상품
+public class ProdSearchVO extends PagingVO {
+
+}

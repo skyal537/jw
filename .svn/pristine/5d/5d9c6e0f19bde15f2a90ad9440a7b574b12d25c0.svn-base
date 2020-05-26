@@ -1,0 +1,59 @@
+package com.study.res.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.study.common.exception.BizException;
+import com.study.res.dao.IResDao;
+import com.study.res.dao.ITouristInfoDao;
+import com.study.res.vo.ResSearchVO;
+import com.study.res.vo.ReserveVO;
+import com.study.res.vo.TouristVO;
+
+@Service
+public class resServiceImpl implements IResService {
+	
+	@Autowired
+	private IResDao resDao;
+	
+	@Autowired
+	private ITouristInfoDao touristInfoDao;
+	
+	@Override
+	public List<ReserveVO> getResList(ResSearchVO searchVO) throws BizException {
+			return resDao.getResList(searchVO);
+	}
+
+	
+	@Override
+	public void registReserve(ReserveVO reserve) throws BizException {
+		resDao.insertReserve(reserve);
+		
+		List<TouristVO> touristes =  reserve.getTourList();
+		for(TouristVO vo : touristes) {
+			vo.setResId(reserve.getResId());
+			touristInfoDao.insertTouristInfo(vo);
+		}
+		
+	}
+
+
+	@Override
+	public void insertTourist(TouristVO tourist) throws BizException {
+		resDao.insertTourist(tourist);
+		
+	}
+
+
+	@Override
+	public List<TouristVO> getTourist(TouristVO tourist) throws BizException {
+		// TODO Auto-generated method stub
+		return resDao.getTourist(tourist);
+	}
+	
+	
+	
+
+}

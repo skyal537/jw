@@ -1,0 +1,80 @@
+package com.study.post.web;
+
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.study.common.exception.BizException;
+import com.study.member.service.IMemberService;
+import com.study.member.vo.MemberSearchVO;
+import com.study.post.service.IPostService;
+import com.study.post.vo.PostVO;
+
+@Controller
+@RequestMapping("/post")
+public class PostController {
+	
+	private final Logger logger = LoggerFactory.getLogger(getClass());
+	
+	@Autowired
+	private IPostService postService;
+	
+	/**
+	 * 쪽지함 이동
+	 * @param
+	 * @return
+	 * @throws BizException
+	 */
+	@RequestMapping(value = "/postList.do")
+	public String postList(@ModelAttribute("searchVO") MemberSearchVO searchVO, ModelMap model) throws BizException {		
+		
+		List<PostVO> list = postService.getPostList();
+		logger.info("list size = {}", list.size());
+		
+		model.addAttribute("list", list);
+		
+		
+		return "post/postList";
+	}
+	
+	/**
+	 * 쪽지쓰기
+	 * @param
+	 * @return
+	 * @throws BizException
+	 */
+	@RequestMapping("/postForm.do")
+	public String postForm() throws BizException  {			
+		return null;
+	}
+	
+	/**
+	 * 쪽지 보기
+	 * @param
+	 * @return
+	 * @throws BizException
+	 */
+	@RequestMapping("/postView.do")
+	public String postView() throws BizException  {				
+		return null;
+	}
+	
+	/**
+	 * 답장 
+	 * @param
+	 * @return
+	 * @throws BizException
+	 */
+	@RequestMapping("/postAnswer.do")
+	public String postAnswer() throws BizException  {			
+		return null;
+	}
+
+}

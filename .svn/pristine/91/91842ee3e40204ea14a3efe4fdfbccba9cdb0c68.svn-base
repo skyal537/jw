@@ -1,0 +1,22 @@
+package com.study.post.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import com.study.post.vo.PostVO;
+
+@Mapper
+public interface IPostDao {
+
+	
+	public List<PostVO> getList();
+	
+	public int insertPost();
+	
+	public int updatePost();
+	
+	public int deletePost();
+	
+	
+}

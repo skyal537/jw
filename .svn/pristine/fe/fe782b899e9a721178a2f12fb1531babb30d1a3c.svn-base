@@ -1,0 +1,17 @@
+package com.study.calendar.dao;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import com.study.calendar.vo.CalendarVO;
+
+@Mapper
+public interface ICalendarDao {
+	public List<CalendarVO> getCalendarList();
+	public CalendarVO getCalendar(String packageId) throws SQLException;
+	public void registCalendar(CalendarVO calendar) throws SQLException;
+	public void updateCalendar(CalendarVO calendar) throws SQLException;
+	public void removeCalendar(CalendarVO calendar) throws SQLException;
+}

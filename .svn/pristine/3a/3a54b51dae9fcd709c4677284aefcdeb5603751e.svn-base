@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <!-- freBoardMapper.xml -->
+  	<!-- name는 해당 인터페이스 완전한 이름을 사용 -->
+  	
+  	<mapper namespace="com.study.calendar.dao.ICalendarDao">
+  			<select id="getCalendarList"
+  							parameterType="String"
+  							resultType="com.study.calendar.vo.CalendarVO">
+  				select * 
+  				from calendar
+  				where product_id = #{productId}
+  				order by day, step
+  			</select>
+  	</mapper>
+  	
+  	
+  	
+  	

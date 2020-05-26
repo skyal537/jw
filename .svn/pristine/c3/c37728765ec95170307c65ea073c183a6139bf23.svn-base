@@ -1,0 +1,15 @@
+package com.study.calendar.service;
+
+import java.util.List;
+
+import com.study.calendar.vo.CalendarVO;
+import com.study.common.exception.BizException;
+
+
+public interface ICalendarService {
+	public List<CalendarVO> getCalendarList(String packageId);
+	public CalendarVO getCalendar(String packageId) throws BizException;
+	public void registCalendar(CalendarVO calendar) throws BizException;
+	public void updateCalendar(CalendarVO calendar) throws BizException;
+	public void removeCalendar(CalendarVO calendar) throws BizException;
+}

@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <!-- freBoardMapper.xml -->
+  	<!-- name는 해당 인터페이스 완전한 이름을 사용 -->
+  	
+  	
+  	<mapper namespace="com.study.tour.dao.ITourDao">
+  	
+  		<select id="getPackCount"
+  							parameterType="com.study.tour.vo.PackSearchVO" 
+  							resultType="int">
+  					SELECT count(*) 
+						FROM  t_package
+  					
+  			</select>
+  			
+  			<select id="getProdCount"
+  							parameterType="String" 
+  							resultType="int">
+  					SELECT count(*) 
+						FROM  t_product
+						where package_id = #{packageId}
+  					
+  			</select>
+  	
+  			<select id="getPackageList"
+  							parameterType="com.study.tour.vo.PackSearchVO" 
+  							resultType="com.study.tour.vo.PackageVO">
+  					<include refid="common.PRE_PAGING_QRY"/>
+  					select * from t_package
+  					<include refid="common.POST_PAGING_QRY"/>
+  					
+  			</select>
+  			
+  			<select id="getProdList"
+  							parameterType="String" 
+  							resultType="com.study.tour.vo.ProductVO">
+  					select * 
+  					from t_product
+  					where package_Id = #{packageId}
+  					 
+  						
+  			</select>
+  			
+  			<select id="getProduct"
+  							parameterType="String" 
+  							resultType="com.study.tour.vo.ProductVO">
+  					select * 
+  					from t_product
+  					where product_Id = #{productId}
+  					 
+  						
+  			</select>
+  			
+  			<select id="getPackage"
+  							parameterType="String" 
+  							resultType="com.study.tour.vo.PackageVO">
+  					select * 
+  					from t_package
+  					where package_id = #{packageId}
+  					 
+  						
+  			</select>
+  			
+  			<insert id="registProduct" 
+  							parameterType="com.study.tour.vo.ProductVO">
+  					INSERT INTO t_product (
+										    product_id         , product_name      , start_date
+										    , end_date         , res_yn            , total_people
+										    , apply_people     , notice            , adult_price
+										    , child_price      , baby_price        , account
+										    , account_bank     , package_period    , air_start
+										    , air_end          , view_yn           , air_line_nm
+										    , package_id
+										) VALUES (
+										    #{productId}      , #{productName}  , #{startDate}
+										    , #{endDate}      , 'Y'    					, #{totalPeople}
+										    , 0    , #{notice}    , #{adultPrice}
+										    , #{childPrice}    , #{babyPrice}    , #{account}
+										    , #{accountBank}    , #{packagePeriod}    , #{airStart}
+										    , #{airEnd}    , 'N'    , #{airLineNm}
+										    , #{packageId}
+										)
+  			</insert>
+  			
+  			<update id="updateProduct"
+  								parameterType="com.study.tour.vo.ProductVO">
+  								UPDATE t_product
+										SET
+										    	product_id = 		#{productId}
+										    , product_name = 	#{productName}
+										    , start_date = 		#{startDate}
+										    , end_date = 			#{endDate}
+										    , res_yn = 				'Y'
+										    , total_people = 	#{totalPeople}
+										    , apply_people = 	#{applyPeople}
+										    , notice = 				#{notice}
+										    , adult_price = 	#{adultPrice}
+										    , child_price = 	#{childPrice}
+										    , baby_price = 		#{babyPrice}
+										    , account = 			#{account}
+										    , account_bank = 	#{accountBank}
+										    , package_period = #{packagePeriod}
+										    , air_start = 		#{airStart}
+										    , air_end = 			#{airEnd}
+										    , view_yn = 			#{viewYn}
+										    , air_line_nm = 	#{airLineNm}
+										    , package_id = 		#{packageId}
+										WHERE
+										    product_id = #{productId}
+  			</update>
+  			
+  			<delete id="removeProduct"
+  								parameterType="String">
+  				delete t_product
+  				where product_id = #{productId}
+  			</delete>
+  			
+  			<delete id="removeSelProduct">
+  				delete t_product
+  				<where>
+						<if test="array == null">
+							1=0
+						</if>
+						<if test="array !=null">
+							<foreach collection="array" item="prod" open="product_id in (" close=")" separator=", ">
+								#{prod}
+							</foreach>
+						</if>
+					</where>
+  			</delete>
+  			
+  			
+  			<update id="updatePackPeriod"
+  							parameterType="String">
+  					update t_package 
+					    set package_dep_period1 = (
+                                           select min(START_DATE)
+                                           from t_product
+                                           where t_product.package_id = #{packageId})
+					    , package_dep_period2 = (
+                                           select max(end_date)
+                                           from t_product
+                                           where t_product.package_id = #{packageId})
+					where package_id = #{packageId}
+  			</update>
+  			
+  			<insert id="registPackage"
+  							parameterType="com.study.tour.vo.PackageVO">
+  						 INSERT INTO t_package (
+							    package_id                      , package_name   , package_region
+							    , package_price                , package_pic       , package_grade
+							    , package_dep_period1    , total_people     , notice
+							    , adult_price                     , child_price         , baby_price
+							    , account_bank                 , account            , package_period    
+							    , air_start                          , air_end              , package_dep_period2
+							    , view_yn
+							) VALUES (
+							    #{packageId}           , #{packageName}    , #{packageRegion}
+							    , 0                         , #{packagePic}         , 0
+							    , '1'                        , #{totalPeople}           , #{notice}
+							    , #{adultPrice}         , #{childPrice}         , #{babyPrice}
+							    , #{accountBank}    , #{account}            , #{packagePeriod}
+							    , #{airStart}          , #{airEnd}                , '1'
+							    , 'N'
+							)
+  			</insert>
+  			
+  			<update id="updatePackage"
+  							parameterType="com.study.tour.vo.PackageVO">
+  					UPDATE t_package
+							SET
+							     package_name =            #{packageName}
+							    , package_region =         #{packageRegion}
+							    , package_price =          0
+							    , package_pic =            #{packagePic}
+							    , total_people =           #{totalPeople}
+							    , notice =                 #{notice}
+							    , adult_price =            #{adultPrice} 
+							    , child_price =            #{childPrice} 
+							    , baby_price =             #{babyPrice}
+							    , account_bank =           #{accountBank}
+							    , account =                #{account} 
+							    , package_period =         #{packagePeriod}
+							    , air_start =              #{airStart}
+							    , air_end =                #{airEnd} 
+							    , view_yn =                #{viewYn}
+						WHERE
+							   package_id = #{packageId}
+  			</update>
+  			
+ 				<delete id="removePackage"
+ 								parameterType="String">
+ 						delete from t_package
+ 						where package_id = #{packageId}
+ 				</delete>
+  	</mapper>
+  	
+  	
+  	
+  	

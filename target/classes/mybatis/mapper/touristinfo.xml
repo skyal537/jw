@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper 
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--common.xml  -->
+<!-- namespace는 해당 인터페이스 완전한 이름을 사용 -->
+<mapper namespace="com.study.res.dao.ITouristInfoDao">
+	
+	<insert id="insertTouristInfo" parameterType="com.study.res.vo.TouristVO">
+		    
+	    INSERT INTO tourlist_info (
+	    tourist_id
+	    , tourist_kr_nm
+	    , tourist_fst_nm
+	    , tourist_lst_nm
+	    , res_id
+	    , tourist_age
+	    , tourist_hp
+	    ) VALUES (
+	      #{resId} || '_' || SEQ_TOURIST_INFO.NEXTVAL
+	    , #{touristKrNm}
+	    , #{touristFstNm}
+	    , #{touristLstNm}
+	    , #{resId}
+	    , #{touristAge}
+	    , #{touristHp}
+	)
+	</insert>
+	
+	<update id="updateTourist" parameterType="com.study.res.vo.TouristVO">
+		UPDATE tourlist_info
+		   SET tourist_kr_nm   = #{touristKrNm}
+			,  tourist_fst_nm    = #{touristFstNm} 
+			,  tourist_lst_nm     = #{touristLstNm}
+			,  tourist_hp   = #{touristHp}
+		
+	 	WHERE res_id      = #{resId}   
+		  
+	</update>
+	
+	
+	<update id="updatePeopleCnt" parameterType="com.study.tour.vo.ProductVO">
+  		UPDATE
+  			T_PRODUCT
+		SET
+			TOTAL_PEOPLE = (TOTAL_PEOPLE - ${totalPeople})
+			, APPLY_PEOPLE = (APPLY_PEOPLE + ${totalPeople})
+		WHERE
+			PRODUCT_ID = #{productId}
+	</update>
+	
+	
+	
+</mapper>

@@ -1,0 +1,5 @@
+package com.study.res.dao;
+
+public interface IResDao {
+	
+}

@@ -1,0 +1,18 @@
+package com.study.data.dao;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import com.study.data.vo.AreaVO;
+import com.study.data.vo.CityVO;
+import com.study.data.vo.ThemeVO;
+
+@Mapper
+public interface IDataDao {
+	List<CityVO> getCityListByTour(String code) throws SQLException;
+	List<AreaVO> getAreaList() throws SQLException;
+	List<ThemeVO> getThemeList() throws SQLException;
+
+}

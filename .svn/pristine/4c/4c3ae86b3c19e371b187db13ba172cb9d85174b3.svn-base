@@ -1,0 +1,15 @@
+package com.study.res.service;
+
+
+import java.util.List;
+
+import com.study.common.exception.BizException;
+import com.study.res.vo.ResSearchVO;
+import com.study.res.vo.ReserveVO;
+
+
+public interface IResService {
+	public List<ReserveVO> getResList(ResSearchVO searchVO) throws BizException;
+	public void registList(ReserveVO reserve) throws BizException;
+	
+}

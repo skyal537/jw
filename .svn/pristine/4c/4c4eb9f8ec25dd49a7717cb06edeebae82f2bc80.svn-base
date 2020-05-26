@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <!-- freBoardMapper.xml -->
+  	<!-- name는 해당 인터페이스 완전한 이름을 사용 -->
+  	
+  	<!-- 조건에 맞는 애들을 찾아주는 역할 검색관련  -->
+  <mapper namespace="com.study.res.dao.IResDao">
+  		<sql id="whereSearchClause">
+  					<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchWord)
+									and @org.apache.commons.lang3.StringUtils@isNotBlank(searchType)">
+						<choose>
+							<when test='searchType == "T"'>
+								AND mem_id LIKE '%' || #{searchWord} || '%'
+							</when>
+							<when test='searchType == "W"'>
+								AND res_id LIKE '%' || #{searchWord} || '%'
+							</when>
+							<!-- <when test='searchType == "prodname"'> 
+								AND product_name LIKE '%' || #{searchWord} || '%'
+							</when> -->
+							<when test='searchType == "C"'>
+								AND product_id LIKE '%' || #{searchWord} || '%'
+							</when>
+					<!-- 		<when test='searchType == "memname"'>
+								AND mem_name LIKE '%' || #{searchWord} || '%'
+							</when> -->
+						</choose>
+					</if>
+					<!-- <if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchCategory)">
+						and bo_category =  #{searchCategory} 
+					</if> -->
+  			</sql>
+  				<!-- 조건에 맞는 애들을 찾아주는 역할 검색관련  -->
+  				
+  				
+  				  <select id="getResList" 
+  				 parameterType="com.study.res.vo.ResSearchVO"
+  				 	resultType="com.study.res.vo.ReserveVO">
+						<include refid="common.PRE_PAGING_QRY"/>
+									SELECT
+								    res_id 					
+								    , pay_yn 			
+								    , product_id 	
+								    , mem_id 			
+								    , cancel_yn 		
+								    , res_people 	
+								    , res_price 		
+								    , req_claim 		
+								    , res_date 
+								    , account 			
+								    , account_bank 
+								FROM
+    								reserve
+								where 1=1
+								
+								
+								
+  						<include refid="whereSearchClause"/>
+  						ORDER by res_id DESC
+  						<include refid="common.POST_PAGING_QRY"/>
+  				</select> 
+  				
+  			
+  				
+  					
+  				
+  				<select id="getResCount"
+  							parameterType="com.study.res.vo.ResSearchVO" 
+  							resultType="int">
+  					SELECT count(*) 
+						FROM reserve  
+						where 1=1
+  				<include refid="whereSearchClause"/>
+  					
+  			</select>
+  				
+  			
+  		   <insert id="insertReserve"
+  			 	parameterType="com.study.res.vo.ReserveVO">
+  			 	<selectKey keyProperty="resId" resultType="String" order="BEFORE">
+  			 		SELECT TO_CHAR(sysdate, 'YYYYMMDD') || LPAD(SEQ_RES.NEXTVAL, 4, '0') FROM dual
+  			 	</selectKey>
+  			 	
+  	 			INSERT INTO reserve (
+									      res_id
+									    , pay_yn
+									    , product_id
+									    , mem_id
+									    , cancel_yn
+									    , res_people
+									    , res_price
+									    , req_claim
+									    , res_date
+									    , account
+									    , account_bank
+									) VALUES (
+									     #{resId}
+									    	,	'N' 
+									            ,  #{productId} 
+									    , #{memId}
+									    , 'N'
+											 , #{resPeople}
+											 , #{resPrice}
+										  , #{reqClaim}
+									    , sysdate
+									    , #{account}
+									    , #{accountBank}
+										)
+  				</insert>
+  				
+  				
+  				
+  				 <update id="updateReservePay" 
+  				 		parameterType="com.study.res.vo.ReserveVO"	>
+  				 				UPDATE reserve
+									SET
+									    pay_yn = 'Y'
+									WHERE
+									 		
+									 	res_id in 
+									 	<foreach collection="reserveIds" item="item" open="(" close=")" separator="," >
+									 	 #{item}
+									 	</foreach>	
+					</update>
+  				
+  					<update id="updateReserveCancel"
+  						parameterType="com.study.res.vo.ReserveVO">
+  								UPDATE reserve
+									SET
+									    cancel_yn = 'Y'
+									WHERE
+									    res_id in
+											<foreach collection="reserveIds" item="item" open="(" close=")" separator="," >
+												#{item}
+											</foreach>	
+						</update>  
+  					 
+  					 
+  					<insert id="insertTourist" parameterType="com.study.res.vo.TouristVO">
+	  					     INSERT INTO tourlist_info (
+									    tourist_id
+									    , tourist_kr_nm
+									    , tourist_fst_nm
+									    , tourist_lst_nm
+									    , res_id
+									    , tourist_age
+									    , tourist_hp
+										) VALUES (
+										     #{resId} || '_' || SEQ_TOURIST_INFO.NEXTVAL
+										    , #{touristKrNm}
+										    , #{touristFstNm}
+										    , #{touristLstNm}
+										    , #{resId}
+										    , #{touristAge}
+										    , #{touristHp}
+										)
+  						</insert>
+  						
+  						<select id="getTourist" 
+  						parameterType="com.study.res.vo.TouristVO"
+  						resultType="com.study.res.vo.TouristVO">
+  						SELECT
+							    tourist_id
+							    , tourist_kr_nm
+							    , tourist_fst_nm
+							    , tourist_lst_nm
+							    , tourist_age
+							    , tourist_hp
+							    , res_id
+							FROM
+							    tourlist_info
+							   WHERE res_id = #{resId}
+						</select>
+						
+					<select id="getUserRes" 
+  				 parameterType="com.study.login.vo.UserVO"
+  				 	resultType="com.study.res.vo.ReserveVO">
+						<!-- <include refid="common.PRE_PAGING_QRY"/> -->
+						<!-- 	<include refid="common.PRE_PAGING_QRY"/> -->
+									SELECT
+									    res_id
+									    , pay_yn
+									    , mem_id
+									    , res_people
+									    , res_price
+									    , res_date
+									    , product_id
+									<!-- WHERE mem_id = #{userId} -->
+							<!-- 		WHERE res_id = #{resId} -->
+									FROM
+									    reserve
+									WHERE mem_id = #{userId} 
+									  AND cancel_yn = 'N' 
+						<!-- 		<include refid="whereSearchClause"/> -->
+									ORDER by res_id DESC
+						<!-- 		<include refid="common.POST_PAGING_QRY"/> -->
+							<!-- 	ORDER by res_id DESC -->
+  						<!-- SELECT * FROM reserve -->
+  						<!-- <include refid="common.POST_PAGING_QRY"/> -->
+  				</select> 
+					
+					
+					
+					<select id="getRes"
+  							parameterType="String" 
+  							resultType="com.study.res.vo.ReserveVO">
+  					select * 
+  					from reserve
+  					where res_id = #{resId}
+  					</select>	
+  			<!-- 삭제(취소)관련 -->
+  			<update id="deleteBoard" parameterType="com.study.res.vo.ReserveVO">
+								UPDATE reserve 
+								SET 
+								    cancel_yn = 'Y' 
+								WHERE 
+								    res_id = #{resId} 
+								    
+				</update>
+						
+				<delete id="deleteCheckedBoard">
+					UPDATE reserve
+						set cancel_yn = 'Y'
+					<where>
+						<if test="array == null">
+							1=0
+						</if>
+						<if test="array !=null">
+							<foreach collection="array" item="item" open="res_id in (" close=")" separator=", ">
+								#{item}
+							</foreach>
+						</if>
+					</where>
+				</delete>		
+			<!-- 삭제(취소)관련 -->
+						
+						
+						
+						
+						
+						
+						
+						
+  	</mapper>
+  		
+  	
+  	
+  	

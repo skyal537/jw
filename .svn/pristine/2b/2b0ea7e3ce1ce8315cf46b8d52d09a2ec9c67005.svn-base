@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+  <!-- member.xml -->
+  <!-- name는 해당 인터페이스 완전한 이름을 사용 -->
+
+<mapper namespace="com.study.member.dao.IMemberDao">
+
+	<sql id="whereSearchClause">
+		<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchWord)
+			  and @org.apache.commons.lang3.StringUtils@isNotBlank(searchType)">
+			<choose>
+				<when test='searchType == "id"'>
+					AND mem_id LIKE '%' || #{searchWord} || '%'
+				</when>
+				<when test='searchType == "name"'>
+					AND mem_name LIKE '%' || #{searchWord} || '%'
+				</when>
+			</choose>
+		</if>
+	</sql>
+
+
+	<select id="getMemberMgCount"  parameterType="com.study.member.vo.MemberSearchVO" resultType="int">
+		SELECT count(*)
+		FROM  member
+		<where>
+			<include refid="whereSearchClause"/>
+		</where>
+	</select>
+
+	<select id="getMemberMgList" parameterType="com.study.member.vo.MemberSearchVO" resultType="com.study.member.vo.MemberVO">
+		<include refid="common.PRE_PAGING_QRY"/>
+			select *
+			from member
+			<where>
+				<include refid="whereSearchClause"/>
+			</where>
+		<include refid="common.POST_PAGING_QRY"/>
+	</select>
+
+
+
+
+	<select id="getMember" parameterType="String" resultType="com.study.member.vo.MemberVO">
+		SELECT
+			A.MEM_ID
+			, A.MEM_PASS
+			, A.MEM_NAME
+			, A.MEM_BIR
+			, A.MEM_HP
+			, A.MEM_MAIL
+			, A.MEM_ADDR
+			, A.MEM_ADDR2
+			, A.MEM_SEX
+			, A.AUTH_CODE
+			, A.AREA_CODE
+			, A.COUNTRY_ID
+			, A.THEME_CODE
+			, A.MEM_DEL_YN
+			, B.AUTH_NM
+		FROM MEMBER A, AUTH B
+		WHERE A.AUTH_CODE = B.AUTH_CODE(+)
+		AND A.MEM_ID = #{memId}
+	</select>
+
+
+
+
+
+
+</mapper>
+
+

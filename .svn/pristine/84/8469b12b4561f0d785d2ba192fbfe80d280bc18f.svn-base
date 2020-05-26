@@ -1,0 +1,18 @@
+package com.study.res.dao;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+//Controller->service(autowired)->dao(mapper)->mybatis(xml)
+
+import com.study.res.vo.ReserveVO;
+
+
+import com.study.res.vo.ResSearchVO;
+@Mapper
+public interface IResDao {
+	
+		public List<ReserveVO> getResList(ResSearchVO searchVO) throws SQLException;
+		public int registList(ReserveVO reserve) throws SQLException;
+}

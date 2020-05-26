@@ -1,0 +1,59 @@
+package com.study.post.dao;
+
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import com.study.post.vo.PostSearchVO;
+import com.study.post.vo.PostVO;
+
+@Mapper
+public interface IPostDao {
+	
+	/**
+	 * 쪽지 전체 수
+	 * @param serachVO
+	 * @return int
+	 */
+	public int getPostCount(PostSearchVO searchVO);
+
+
+	/**
+	 * 쪽지 리스트 조회(보낸쪽지함)
+	 * @param 
+	 * @return List<PostVO>
+	 */
+	public List<PostVO> getSendList(PostSearchVO searchVO);
+	
+	/**
+	 * 쪽지 리스트 조회(받은쪽지함)
+	 * @param 
+	 * @return List<PostVO>
+	 */
+	public List<PostVO> getArriveList(PostSearchVO searchVO);
+	
+	
+	/**
+	 * 쪽지 확인
+	 * @param postId
+	 * @return PostVO
+	 */
+	public PostVO getPostCheck(int postId);
+	
+	
+	/**
+	 * 쪽지 보내기(등록)
+	 * @param post
+	 * @return int
+	 */
+	public int registPost(PostVO post);
+	
+	/**
+	 * 쪽지 삭제
+	 * @param posts
+	 * @return int
+	 */
+	public int deletePost(int[] posts);
+	
+	
+}

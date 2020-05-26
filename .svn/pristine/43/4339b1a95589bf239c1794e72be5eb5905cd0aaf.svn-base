@@ -1,0 +1,67 @@
+package com.study.member.service;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.study.common.exception.BizException;
+import com.study.member.dao.IMemberDao;
+import com.study.member.vo.MemberSearchVO;
+import com.study.member.vo.MemberVO;
+
+@Service
+public class MemberServiceImpl implements IMemberService {
+
+	@Autowired
+	private IMemberDao memberDao;
+
+	@Override
+	public List<MemberVO> getMemberMgList(MemberSearchVO searchVO) throws BizException {
+
+		try {
+			int rowCount = memberDao.getMemberMgCount(searchVO);
+			searchVO.setTotalRowCount(rowCount);
+			searchVO.setting();
+
+			return memberDao.getMemberMgList(searchVO);
+
+		} catch (SQLException e) {
+			throw new BizException(e);
+		}
+	}
+
+	@Override
+	public MemberVO getMember(String memId) throws BizException {
+
+		try {
+			MemberVO member = memberDao.getMember(memId);
+			return member;
+
+		} catch (SQLException e) {
+
+			e.printStackTrace();
+		}
+
+		return null;
+	}
+
+	@Override
+	public void registMember(MemberVO member) throws BizException {
+
+	}
+
+	@Override
+	public void modifyMember(MemberVO member) throws BizException {
+
+	}
+
+	@Override
+	public void removeMember(MemberVO member) throws BizException {
+
+	}
+
+
+
+}

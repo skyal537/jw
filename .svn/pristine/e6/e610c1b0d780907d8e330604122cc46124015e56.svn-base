@@ -1,0 +1,26 @@
+package com.study.data.service;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import com.study.common.exception.BizException;
+import com.study.data.dao.IDataDao;
+import com.study.data.vo.CityVO;
+
+public class DataServiceImp implements IDataService{
+	
+	@Autowired
+	private IDataDao dataDao; 
+
+	@Override
+	public List<CityVO> getCityListByTour(String code) throws BizException {
+		try {
+			return dataDao.getCityListByTour(code);
+		} catch (SQLException e) {
+			throw new BizException(e);
+		}
+	}
+
+}

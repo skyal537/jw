@@ -1,0 +1,9 @@
+package com.study.post.vo;
+
+import com.study.common.vo.PagingVO;
+
+//쪽지 페이징
+public class PostSearchVO extends PagingVO{
+
+    
+}

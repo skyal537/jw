@@ -1,0 +1,67 @@
+package com.study.res.web;
+
+import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.study.res.service.IResService;
+import com.study.res.vo.ResSearchVO;
+import com.study.res.vo.ReserveTest;
+import com.study.res.vo.ReserveVO;
+import com.study.res.vo.TourlistVO;
+
+@Controller
+@RequestMapping("/res")
+public class ResController {
+	private final Logger logger = LoggerFactory.getLogger(getClass());
+	@Autowired
+	IResService resService;
+
+	@RequestMapping("/resForm.do")
+	public String form() {
+		System.out.println("--resform controller--");
+		return "res/resForm";
+	}
+	
+//	@RequestMapping("/resView.do")
+//	public String View(String name1) {
+//		System.out.println("--resView controller--");
+//		System.out.println(name1);
+//		return "res/resView";
+//	}
+//	@RequestMapping("/resView.do")
+//			public String view(ReserveVO reserve, ModelMap model) {
+//			model.addAttribute("reserve", reserve);
+//			return "res/resView";
+//	}
+//	@RequestMapping("/resView.do")
+//	public String view(ReserveTest reserve, ModelMap model) {
+//	model.addAttribute("reserve", reserve);
+//	return "res/resView";
+//	}
+	@RequestMapping("/resView.do")
+	public String view(ReserveTest reserve, TourlistVO tourlist, ReserveVO res, ModelMap model) {
+	model.addAttribute("reserve", reserve);
+	model.addAttribute("tourlist", tourlist);
+	model.addAttribute("res", res);
+	return "res/resView";
+	}
+	
+	
+	@RequestMapping("/resMg.do")
+	public String resMg(ModelMap model, ResSearchVO searchVO) {
+		logger.debug("searchVO = {}",searchVO);
+		List<ReserveVO> reserve=resService.getResList(searchVO);
+		logger.debug("reserve = {}",reserve);
+		model.addAttribute("resList", reserve);
+
+		return "res/resMg";
+	}
+	
+	
+}

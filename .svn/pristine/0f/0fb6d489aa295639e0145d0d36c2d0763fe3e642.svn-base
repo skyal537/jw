@@ -1,0 +1,49 @@
+package com.study.res.service;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import org.apache.ibatis.javassist.bytecode.stackmap.BasicBlock.Catch;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.study.common.exception.BizException;
+import com.study.common.exception.BizRegistFailException;
+import com.study.res.dao.IResDao;
+import com.study.res.vo.ResSearchVO;
+import com.study.res.vo.ReserveVO;
+
+@Service
+public class resServiceImpl implements IResService {
+	
+	@Autowired
+	IResDao resDao;
+	
+	@Override
+	public List<ReserveVO> getResList(ResSearchVO searchVO) throws BizException {
+		
+		try {
+			return resDao.getResList(searchVO);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
+	public void registList(ReserveVO reserve) throws BizException {
+		try {
+			int res = resDao.registList(reserve);
+			if(res<1) {
+				throw new BizRegistFailException();
+			}
+		} catch (SQLException e) {
+			throw new BizException(e); 
+		}
+		
+	} 
+
+	
+
+}

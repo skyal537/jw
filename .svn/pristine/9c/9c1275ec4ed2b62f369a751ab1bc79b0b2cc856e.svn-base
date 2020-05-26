@@ -1,0 +1,7 @@
+package com.study.tour.vo;
+
+import com.study.common.vo.PagingVO;
+
+public class PackSearchVO extends PagingVO{
+
+}

@@ -1,0 +1,80 @@
+package com.study.res.service;
+
+
+import java.util.List;
+
+import org.springframework.stereotype.Service;
+
+import com.study.common.exception.BizException;
+
+import com.study.login.vo.UserVO;
+
+import com.study.res.vo.ResSearchVO;
+import com.study.res.vo.ReserveDTO;
+import com.study.res.vo.ReserveVO;
+import com.study.res.vo.TouristVO;
+
+
+@Service
+public interface IResService {
+	
+	
+	public List<ReserveVO> getResList(ResSearchVO searchVO) throws BizException;
+	
+	
+	
+	
+	/**
+	 * 예약 정보 등록 
+	 * @param reserve
+	 * @throws BizException
+	 */
+	public void registReserve(ReserveVO reserve) throws BizException;
+	
+	/**
+	 * 여행자 정보 추가
+	 * 
+	 * @param tourist
+	 */
+	
+	public void insertTourist(TouristVO tourist) throws BizException;
+	
+	/**
+	 * 여행자 정보 리스트 반환 
+	 * 
+	 * @param tourist
+	 */
+	
+	
+	public List<TouristVO> getTourist(TouristVO tourist) throws BizException;
+	
+	
+	
+//	public List<ReserveVO> getUserRes(UserVO user) throws BizException;
+	
+	
+	public ReserveVO getRes(String resId) throws BizException;
+	
+	
+	public int updateReserveAndProduct(ReserveDTO dto) throws BizException;
+	
+	
+	public int updateReserveCancel(ReserveVO reserve) throws BizException;
+	
+	
+	
+	
+	
+	//삭제(취소)관련
+	public void removeBoard(ReserveVO reserve) throws BizException;
+	public void removeCheckedBoard(String[] reserveIds) throws BizException;
+	
+	//수정관련
+
+	public void updateReserve(ReserveVO reserve) throws BizException;
+
+	
+	
+	
+	
+}

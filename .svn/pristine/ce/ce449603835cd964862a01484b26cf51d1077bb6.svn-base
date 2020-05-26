@@ -1,0 +1,62 @@
+package com.study.member.dao;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import com.study.member.vo.MemberSearchVO;
+import com.study.member.vo.MemberVO;
+
+@Mapper
+public interface IMemberDao {
+
+	public int getMemberMgCount(MemberSearchVO searchVO) throws SQLException;
+
+	/**
+	  * 회원 테이블 목록 조회
+	 * @param serachVO
+	 * @return 회원 목록
+	 * @throws SQLException
+	  */
+	public List<MemberVO> getMemberMgList(MemberSearchVO searchVO) throws SQLException;
+
+
+	/**
+	  * 요청한<b> 회원아이디</b>에 해당하는 회원을 조회한다.
+	 * @param memId
+	 * @return MemberVO
+	 * @throws SQLException
+	  */
+	public MemberVO getMember(String memId) throws SQLException;
+
+
+	/**
+	 *  회원 등록 <br>
+	 * @param member
+	 * @return int
+	 * @throws SQLException
+	  */
+	public int registMember(MemberVO member) throws SQLException;
+
+
+	/**
+	 *  회원 정보수정 <br>
+	 *  비밀번호는 변경되지 않음
+	 * @param member
+	 * @return int
+	 * @throws SQLException
+	  */
+	public int updateMember(MemberVO member) throws SQLException;
+
+
+	/**
+	 *  회원 탈퇴 <br>
+	 *  회원 테이블의 회원 삭제 여부(mem_del_yn)를  "Y"로 변경
+	 * @param member
+	 * @return int
+	 * @throws SQLException
+	  */
+	public int deleteMember(MemberVO member) throws SQLException;
+
+}

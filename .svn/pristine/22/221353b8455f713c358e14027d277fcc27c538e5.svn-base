@@ -1,0 +1,79 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<title>예약관리</title>
+</head>
+<body>
+	<%@include file="/WEB-INF/inc/top_menu.jsp" %>
+<div class="container">
+		<h1>예약관리</h1>
+		<table class="table table-bordered">
+		<tr>
+        <td>
+            <select >
+                <option value="#">회원아이디</option>
+                <option value="#">예약번호</option>
+                <option value="#">상품명</option>
+                <option value="#">회원이름</option>
+            </select>
+        </td>
+        <td>
+            <input type="text">
+        </td>
+
+        <td>
+            <button>검색</button>
+        </td>
+    </tr>
+    </table>
+
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th><input type="checkbox"></th>
+                <th>예약번호</th>
+                <th>결제완료</th>
+                <th>상품아이디</th>
+                <th>회원아이디</th>
+                <th>예약취소</th>
+                <th>총인원</th>
+                <th>총금액</th>
+                <th>요청사항</th>
+                <th>예약날짜</th>
+                <th>결제계좌</th>
+                <th>결제은행</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            
+             <c:forEach items="${resList}" var="vo">
+              <tr>
+	             <td><input type="checkbox"></td>
+	                <td>${vo.resId}</td> 
+	                <td>${vo.payYn}</td>
+	                <td>${vo.productId}</td>
+	                <td>${vo.memId}</td>
+	                <td>${vo.cancelYn}</td>
+	                <td>${vo.resPeople}</td>
+	                <td>${vo.resPrice}</td>
+	                <td>${vo.reqClaim}</td>
+	                <td>${vo.resDate}</td>
+	                <td>${vo.account}</td>
+	               <td>${vo.accountBank}</td>
+	              </tr> 
+             </c:forEach>
+                
+          
+           
+        </tbody>
+    </table>
+     bhgnbhgnhg ${reserve }
+    <a class="btn btn-default pull-right">예약취소</a>
+    <a class="btn btn-default pull-right">예약승인</a>
+</div>
+</body>
+</html>

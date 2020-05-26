@@ -1,0 +1,145 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<title>예약등록확인</title>
+</head>
+<body>
+	<%@include file="/WEB-INF/inc/top_menu.jsp"%>
+	<div class="container">
+		<h1>예약등록확인</h1>
+		
+		<form action="resModify.do" name="member" method="POST">
+
+			<div class="block_tit_area title">
+				<h3 class="stit_con_title">상품 정보</h3>
+			</div>
+
+			<table class="table table-hover">
+				<colgroup>
+					<col style="width: 15%">
+					<col />
+					<col style="width: 15%">
+					<col style="width: 25%">
+				</colgroup>
+				<tbody>
+					<tr>
+						<th scope="row"><label>상품명</label></th>
+						<td colspan="5">${prod.productName}</td>
+					</tr>
+					<tr>
+						<th scope="row"><label>여행기간</label></th>
+						<td>${prod.packagePeriod}</td>
+						<th scope="row"><label>이용교통</label></th>
+						<td><span class="air_txt">${prod.airLineNm}</span></td>
+					</tr>
+					<tr>
+						<th scope="row"><label>출발일</label></th>
+						<td colspan="5"><span class="flight_num_txt">${prod.startDate}</span></td>
+					</tr>
+					<tr>
+						<th scope="row"><label>도착일</label></th>
+						<td colspan="5"><span class="flight_num_txt">${prod.endDate}</span></td>
+					</tr>
+				</tbody>
+			</table>
+			<br>
+			
+			<h3>예약자 정보</h3>
+			<table class="table table-hover">
+				<colgroup>
+					<col style="width: 15%">
+					<col />
+					<col style="width: 15%">
+					<col style="width: 25%">
+				</colgroup>
+				<tr>
+					<th>이름</th>
+					<td>${member.memName}</td>
+					<th>생년월일</th>
+					<td>${member.memBir}</td>
+				</tr>
+				<tr>
+					<th>이메일</th>
+					<td>${member.memMail}</td>
+					<th>성별</th>
+					<td>${member.memSex}</td>
+				</tr>
+				<tr>
+					<th>휴대폰번호</th>
+					<td >${member.memHp}</td>
+				</tr>
+			</table>
+			<br>
+
+			<h3>여행자 정보</h3>
+			<h5>인원 상세 정보</h5> 
+
+			<table class="table table-hover">
+			<c:forEach items="${tour}" var="vo" varStatus="st">
+				<tr>
+					<th>이름(한글)</th>
+					<td>
+					<input type="hidden" name="tourList[${st.index}].touristId" value="${vo.touristId}">
+					<input type="text" name="tourList[${st.index}].touristKrNm" value="${vo.touristKrNm}"></td>
+					<th>휴대폰번호</th>
+					<td><input type="text" name="tourList[${st.index}].touristHp" value="${vo.touristHp}"></td>
+				</tr>
+				<tr>
+					<th>성(영문)</th>
+					<td><input type="text" name="tourList[${st.index}].touristFstNm" value="${vo.touristFstNm}"></td>
+					<th>이름(영문)</th>
+					<td><input type="text" name="tourList[${st.index}].touristLstNm" value="${vo.touristLstNm}"></td>
+				</tr>
+				</c:forEach>
+			</table>
+			
+ 		
+			<h4>요청사항</h4>
+			<textarea placeholder="요청 사항을 적어주세요." name="reqClaim" id="rervNote"
+				title="내용입력" style="width: 30%" rows="10">${res.reqClaim}</textarea>
+			
+			
+			<h1>계좌 정보</h1>
+			<table border="2" class="table table-hover">
+				<%-- <c:forEach items="${res}" var="vo"> --%>
+					<%-- <input type="text" name="resId" value="${res.resId}"> --%>
+				<tr>
+					<th>결제은행</th>
+					<td>
+					<input type="hidden" name="resId" value="${res.resId}">
+						<select name="accountBank">
+							<option value="" selected>${res.accountBank} 은행을 선택하세요</option>
+							<option value="우리은행"  data-account="045-10210-454685" >우리은행</option>
+							<option value="농협"   data-account="309-8457-74587">농협</option>
+							<option value="국민은행"   data-account="123-45678-12354">국민은행</option>
+							<option value="신한은행"  data-account="99658-12345">신한은행</option>
+					</select></td>
+				</tr>
+				<tr>
+					<th>결제계좌</th>
+					<td><input type="text" value="${res.account}" name="account"></td>
+				</tr>
+				<%-- </c:forEach> --%>
+			</table>
+			
+			<script>
+			
+				$("select[name=accountBank]").change(function() {
+					// alert($(this).find('option:selected').data('account') + "-----" +  $(this).val() );
+					acc = $(this).find('option:selected').data('account');
+					$('input[name=account]').val(acc);
+					
+				}) // select[name=accountBank]").change 
+			</script>
+		
+
+			<button type="submit" class="btn btn-sm btn-success pull-rigth">&nbsp;수&nbsp;정</button>
+			<%-- <a href="${pageContext.request.contextPath}/res/resList.do">수정완료</a> --%>
+
+		</form>
+	</div>
+</body>
+</html>

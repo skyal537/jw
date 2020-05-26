@@ -1,0 +1,76 @@
+package com.study.res.dao;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+//Controller->service(autowired)->dao(mapper)->mybatis(xml)
+
+import com.study.res.vo.ResSearchVO;
+import com.study.res.vo.ReserveVO;
+import com.study.res.vo.TouristVO;
+import com.study.tour.vo.PackSearchVO;
+@Mapper
+public interface IResDao {
+	
+		/**
+		 * 예약현황  목록 반환 
+		 *   관리자 : 전체목록, 일자별, 회원별 ...
+		 *   회원  : 해당 회원 예약현환 목록  
+		 * @param searchVO
+		 * @return
+		 * @throws SQLException
+		 */
+		public List<ReserveVO> getResList(ResSearchVO searchVO);
+		
+		/**
+		 * 예약 등록 
+		 * @param reserve
+		 * @return
+		 */
+		public int insertReserve(ReserveVO reserve);
+		
+		/**
+		 * 결재상태  변경
+		 *  (결재상태,   실 결재금액, . ) 
+		 * @param reserve
+		 * @return
+		 */
+		public int updateReservePay(ReserveVO reserve);
+		
+		/**
+		 * 예약취소 상태 변경
+		 *  ( 예약 취소 상태)  
+		 * @param reserve
+		 * @return
+		 */
+		
+		public int updateReserveCancel(ReserveVO reserve);
+		
+		
+		/**
+		 * 여행자 정보 추가
+		 * 
+		 * @param tourist
+		 */
+		
+		public void insertTourist(TouristVO tourist);
+		
+		/**
+		 * 여행자 정보 리스트 반환 
+		 * 
+		 * @param tourist
+		 */
+		
+		
+		public List<TouristVO> getTourist(TouristVO tourist);
+		
+		
+		
+		
+		public int getResCount(ResSearchVO searchVO);
+		
+		
+		
+		
+}

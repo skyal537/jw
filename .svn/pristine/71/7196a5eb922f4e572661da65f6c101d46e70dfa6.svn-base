@@ -1,0 +1,70 @@
+package com.study.post.vo;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+//쪽지
+public class PostVO {
+
+    private int postId;			/*쪽지ID*/
+    private String postContent;		/*내용*/
+    private String postTitle;		/*제목*/
+    private String memIdSend;		/*보낸이*/
+    private String memIdArrv;		/*받는이*/
+    private String postRegDate;		/*보낸날짜*/
+    
+    
+    @Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
+
+    
+    public int getPostId() {
+        return postId;
+    }
+
+    public void setPostId(int postId) {
+        this.postId = postId;
+    }
+
+    public String getPostContent() {
+        return postContent;
+    }
+
+    public void setPostContent(String postContent) {
+        this.postContent = postContent;
+    }
+
+    public String getPostTitle() {
+        return postTitle;
+    }
+
+    public void setPostTitle(String postTitle) {
+        this.postTitle = postTitle;
+    }
+
+    public String getMemIdSend() {
+        return memIdSend;
+    }
+
+    public void setMemIdSend(String memIdSend) {
+        this.memIdSend = memIdSend;
+    }
+
+    public String getMemIdArrv() {
+        return memIdArrv;
+    }
+
+    public void setMemIdArrv(String memIdArrv) {
+        this.memIdArrv = memIdArrv;
+    }
+
+	public String getPostRegDate() {
+		return postRegDate;
+	}
+
+	public void setPostRegDate(String postRegDate) {
+		this.postRegDate = postRegDate;
+	}
+
+}

@@ -1,0 +1,118 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<title>쪽지함</title>
+	
+	<style type="text/css">
+		table.grid th {text-align: center;}		
+	</style>	
+	
+	<script type="text/javascript">	
+	// 함수를 연결 
+	// - 해당 엘리먼트에서 이벤트(click, change, submit) 에서 함수 직접 call 
+	// - 해당 엘리먼트에 이벤트리스너를 설정 
+	
+	function fn_goPage(e){
+		e.preventDefault();
+		console.log("fn_goPage Call" , this.dataset.page);		
+		var f = document.forms["frm_search"];
+		f.curPage.value = this.dataset.page;
+		f.submit();
+	}
+	
+	function fn_frm_search_submit(){
+		var f = document.forms["frm_search"];
+		f.curPage.value = 1;
+		console.log("fn_frm_search_submit Call" , f.curPage.value);
+		f.submit();
+	}
+	
+	function fn_rowSizePerPage_change(){
+		var f = document.forms["frm_search"];
+		f.curPage.value = 1;
+		f.rowSizePerPage.value = this.value ;
+		console.log("fn_rowSizePerPage_change Call" ,"curPage", f.curPage.value 
+				            , "rowSizePerPage" , f.rowSizePerPage.value);
+		f.submit();
+	}
+	
+	window.onload=function(){
+		document.forms["frm_search"].addEventListener("submit", fn_frm_search_submit );
+		document.getElementById("id_rowSizePerPage").addEventListener("change", fn_rowSizePerPage_change);
+		document.querySelectorAll(".pagination li a[data-page]").forEach(obj =>{ obj.addEventListener('click', fn_goPage);} );
+	}
+		
+	
+	$(document).ready(function(){
+		// 전체 체크 박스 선택시 테이블의 모든 체크박스 토글  	
+		$("#id_check_all").change(function(){
+			var chk =  $(this).prop("checked");
+			$("input[type=checkbox][name=boNums]").prop("checked",chk);			
+		});
+		
+		// 삭제버튼 클릭 
+		$("#btn_checked_delete").click(function(e) {
+			e.preventDefault();
+			// 체크드된 값만 조회 
+			var f = document.forms.frm_post_list;
+			f.action = "removeCheckedBoard.wow";
+			f.submit();			
+		});
+		
+	});
+	
+	</script>	
+</head>
+<body>
+	<%@include file="/WEB-INF/inc/top_menu.jsp" %>
+<div class="container">
+	<div class="page-header">	
+		 <h2> Letter List</h2>
+    </div>
+    
+    <form name="frm_post_list" >
+	    <table class="grid table table-striped table-bordered table-hover">
+	        <colgroup>
+	            <col style="width: 5%;">
+	            <col style="width: 15%;">
+	            <col style="width: 15%;">
+	            <col style="width: 15%;">
+	            <col style=/>
+	            <col style="width: 15%;">
+	        </colgroup>
+	
+	        <thead>
+	        	<th><input type="checkbox" id="id_check_all" /> </th>
+	            <th>NO</th>
+	            <th>보낸이</th>
+	            <th>받는이</th>
+	            <th>내용</th>
+	            <th>답장</th>
+	        </thead>
+	        
+	        <tbody>
+	            <tr class="text-center">
+					<td><input type="checkbox" name="" value="" /></td>	            
+	                <td>1</td>
+	                <td>운영자</td>
+	                <td>김은대</td>
+	                <td>가입을 축하합니다.</td>
+	                <td><input type="button" value=" 답 장 "></td>
+	            </tr>
+	            <tr>
+	                <td>2</td>
+	                <td>운영자</td>
+	                <td>이쁜이</td>
+	                <td>가입을 축하합니다.</td>
+	                <td><input type="button" value=" 답 장 "></td>
+	            </tr>
+	        </tbody>
+	    </table>
+	</form>	
+		
+</div>
+</body>
+</html>

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+  <!-- post.xml -->
+  <!-- name는 해당 인터페이스 완전한 이름을 사용 -->
+
+<mapper namespace="com.study.post.dao.IPostDao">
+
+<!-- 전체 쪽지 수 -->
+	<select id="getPostCount" resultType="int">
+		SELECT count(*)
+		FROM POST
+	</select>
+	
+<!-- 쪽지리스트 -->
+	<select id="getList" resultType="com.study.post.vo.PostVO">
+		<include refid="common.PRE_PAGING_QRY"/>
+			SELECT POST_ID
+				 , POST_CONTENT
+				 , POST_TITLE
+				 , MEM_ID_SEND
+				 , MEM_ID_ARRV
+				 , TO_CHAR(TO_DATE(post_reg_date),'YYYY-MM-DD') as post_reg_date
+			FROM POST
+			ORDER BY POST_ID DESC
+		<include refid="common.POST_PAGING_QRY"/>
+	</select>
+
+<!-- 쪽지보내기 처리 -->
+	<insert id="registPost" parameterType="com.study.post.vo.PostVO" >
+		INSERT INTO POST (
+	    	post_id      , post_content   , post_title
+	   	  , mem_id_send  , mem_id_arrv    , post_reg_date
+		) VALUES (
+			SEQ_POST.NEXTVAL , #{postContent} , #{postTitle}
+		  , #{memIdSend} 	 , #{memIdArrv}   , TO_CHAR(SYSDATE,'YYYY-MM-dd')
+		)
+	</insert>	
+	
+<!-- 쪽지보기(확인) -->
+	<select id="getPostCheck" resultType="com.study.post.vo.PostVO">
+		SELECT POST_ID     , POST_CONTENT  , POST_TITLE
+    		 , MEM_ID_SEND , MEM_ID_ARRV   , POST_REG_DATE
+		  FROM POST
+		 WHERE POST_ID = #{post_id}
+	</select>		
+	
+<!-- 쪽지 삭제하기  -->
+	<delete id="deletePost">
+		DELETE FROM POST
+		<where>  	
+			<if test="array == null">
+					1 = 0
+			</if>
+			<if test="array != null">
+				<foreach collection="array" item="post" open=" post_id in (" close=")" separator="," >
+					 #{post}
+				</foreach>
+			</if>
+		</where>	
+	</delete>	
+
+</mapper>
+
+

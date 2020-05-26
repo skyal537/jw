@@ -1,0 +1,75 @@
+package com.study.res.vo;
+
+//여행자 정보
+public class TourlistVO {
+
+    private String tourlistId;
+
+    private String tourlistKrNm;
+
+    private String tourlistFstNm;
+
+    private String tourlistLstNm;
+
+    private String resId;
+
+    private String tourlistAge;
+
+    private int tourlistHp;
+
+    public String getTourlistId() {
+        return tourlistId;
+    }
+
+    public void setTourlistId(String tourlistId) {
+        this.tourlistId = tourlistId;
+    }
+
+    public String getTourlistKrNm() {
+        return tourlistKrNm;
+    }
+
+    public void setTourlistKrNm(String tourlistKrNm) {
+        this.tourlistKrNm = tourlistKrNm;
+    }
+
+    public String getTourlistFstNm() {
+        return tourlistFstNm;
+    }
+
+    public void setTourlistFstNm(String tourlistFstNm) {
+        this.tourlistFstNm = tourlistFstNm;
+    }
+
+    public String getTourlistLstNm() {
+        return tourlistLstNm;
+    }
+
+    public void setTourlistLstNm(String tourlistLstNm) {
+        this.tourlistLstNm = tourlistLstNm;
+    }
+
+    public String getResId() {
+        return resId;
+    }
+
+    public void setResId(String resId) {
+        this.resId = resId;
+    }
+
+    public String getTourlistAge() {
+        return tourlistAge;
+    }
+
+    public void setTourlistAge(String tourlistAge) {
+        this.tourlistAge = tourlistAge;
+    }
+
+    public int getTourlistHp() {
+        return tourlistHp;
+    }
+
+    public void setTourlistHp(int tourlistHp) {
+        this.tourlistHp = tourlistHp;
+    }
+}

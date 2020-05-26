@@ -1,0 +1,118 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.min.js"></script>
+
+  <style type="text/css">
+ 	.calcontainer{
+ 		position: relative;
+ 	}
+ 	.isCalendarList{
+ 		display: inline-block;
+ 	}
+ 	.resContainer{
+ 		position: absolute;
+ 		display: inline-block;
+ 		
+ 	}
+ 	#sidebar{
+ 		top:0;
+ 	}
+ 	.eachStep{
+ 		padding: 30px;
+ 	}
+  </style>
+  
+	<title></title>
+</head>
+<body>
+	<%@include file="/WEB-INF/inc/top_menu.jsp" %>
+<div class="container">
+		<h1>${product.productName}</h1>
+		<div>${product.productId}</div>
+		<ul class="bxslider">
+			
+			<c:forEach var="vo" items="${cal}">
+				<c:if test="${not empty vo.spotPic}">
+					<div style="display: inline-block"><img alt="" src="${vo.spotPic}" width="300px">
+					</div>
+				</c:if>
+			</c:forEach> 
+		</ul>
+		<br>
+		<table class="grid table table-bordered table-striped hover ">
+			<tr>
+				<td>여행기간</td>
+				<td colspan="4">${product.packagePeriod}</td>
+			</tr>
+			<tr>
+				<td rowspan="2">이용 교통</td>
+				<td colspan="4">${product.airLineNm}</td>
+			</tr>
+			<tr>
+				<td>${product.airStart}</td>
+				<td>${product.startDate}</td>
+				<td>${product.airEnd}</td>
+				<td>${product.endDate}</td>
+			</tr>
+		</table>
+		<br>
+		<table class="grid table table-bordered table-striped hover ">
+			<tr class="text-center">
+				<th>성인</th>
+				<th>아동</th>
+				<th>유아</th>
+			</tr>
+			<tr class="text-center">
+				<td>${product.adultPrice}</td>
+				<td>${product.childPrice}</td>
+				<td>${product.babyPrice}</td>
+			</tr>
+		</table>
+		<br>
+		<div>
+			<pre>
+				${product.notice}
+			</pre>
+		</div>
+		
+		<div class="calContainer">
+			<div class="isCalendarList">
+				<div class="panel panel-default eachStep">
+				<c:forEach var="vo" items="${cal}" varStatus="st">
+				<c:set var="nextStep" value="${cal[st.index+1].day }"/>
+				<c:set var="prevStep" value="${cal[st.index-1].day }"/>
+<!-- 					<div class="panel panel-default">-->						
+					<div><h2>
+					<c:if test="${prevStep ne vo.day}">
+						${vo.day}일차
+					</c:if>
+					 </h2></div>
+						<div class="col-sm-offset-1">
+							<div><h4>${vo.calendarTitle}</h4></div>
+							<div>${vo.calendarContent}</div>
+							<c:if test="${not empty vo.spotPic}">
+								<div class="col-sm-offset-1">
+									<div><h4>${vo.spotName }</h4></div>
+									<div><img alt="" src="${vo.spotPic }" width="200px"></div>
+								</div>
+							</c:if>
+						</div>
+					<c:if test="${nextStep > vo.day}">
+						</div><div class="panel panel-default eachStep">
+					</c:if>
+					
+				</c:forEach>
+			</div>
+		</div>	<!--cal컨테이너  -->
+		
+		
+		<a href="${pageContext.request.contextPath}/res/resForm.do?productId=${product.productId}">예약하기</a>
+</div>	<!--콘테이너  -->
+</body>
+</html>

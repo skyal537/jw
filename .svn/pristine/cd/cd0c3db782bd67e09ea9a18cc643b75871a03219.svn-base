@@ -1,0 +1,138 @@
+package com.study.tour.service;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.study.common.exception.BizException;
+import com.study.common.exception.BizRegistFailException;
+import com.study.tour.dao.ITourDao;
+import com.study.tour.vo.PackSearchVO;
+import com.study.tour.vo.PackageVO;
+import com.study.tour.vo.ProductVO;
+
+@Service
+public class TourServiceImp implements ITourService {
+
+	@Autowired
+	ITourDao tourDao;
+	
+	@Override
+	public List<PackageVO> getPackageList(PackSearchVO searchVO) throws BizException {
+		try {
+			int rowCount = tourDao.getPackCount(searchVO);
+			searchVO.setTotalRowCount(rowCount);
+			searchVO.setting();
+			return tourDao.getPackageList(searchVO);
+		} catch (SQLException e) {
+			throw new BizException(e);
+		}
+	}
+
+	@Override
+	public PackageVO getPackage(String packageId) throws BizException {
+		try {
+			PackageVO packageVO = tourDao.getPackage(packageId);
+			return packageVO;
+		} catch (SQLException e) {
+			throw new BizException(e);
+		}
+	}
+
+	@Override
+	public void registPackage(PackageVO packageVO) throws BizException {
+		try {
+			int res =	tourDao.registPackage(packageVO);
+			if(res<1) {
+				throw new BizRegistFailException();
+			}
+		} catch (SQLException e) {
+			throw new BizException(e);
+		}
+		
+	}
+
+	@Override
+	public void updatePackage(PackageVO packageVO) throws BizException {
+		try {
+			int res = tourDao.updatePackage(packageVO);
+			if(res<1) {
+				throw new BizRegistFailException();
+			}
+		} catch (SQLException e) {
+			throw new BizException();
+		}
+	}
+
+	@Override
+	public void removePackage(PackageVO packageVO) throws BizException {
+		try {
+			int res = tourDao.removePackage(packageVO);
+			if(res<1) {
+				throw new BizRegistFailException();
+			}
+		} catch (SQLException e) {
+			throw new BizException();
+		}
+	}
+
+	@Override
+	public List<ProductVO> getProdList(String productId) throws BizException {
+		try {
+			return tourDao.getProdList(productId);
+		} catch (SQLException e) {
+			throw new BizException(e);
+		}
+	}
+
+	@Override
+	public ProductVO getProduct(String productId) throws BizException {
+		try {
+			ProductVO productVO = tourDao.getProduct(productId);
+			return productVO;
+		} catch (SQLException e) {
+			throw new BizException(e);
+		}
+	}
+
+	@Override
+	public void registProduct(ProductVO product) throws BizException {
+		try {
+			int res =	tourDao.registProduct(product);
+			if(res<1) {
+				throw new BizRegistFailException();
+			}
+		} catch (SQLException e) {
+			throw new BizException(e);
+		}
+	}
+
+	@Override
+	public void updateProduct(ProductVO product) throws BizException {
+		try {
+			int res = tourDao.updateProduct(product);
+			if(res<1) {
+				throw new BizRegistFailException();
+			}
+		} catch (SQLException e) {
+			throw new BizException();
+		}
+	}
+
+	@Override
+	public void removeProduct(String productId) throws BizException {
+		try {
+			int res = tourDao.removeProduct(productId);
+			if(res<1) {
+				throw new BizRegistFailException();
+			}
+		} catch (SQLException e) {
+			throw new BizException();
+		}
+	}
+
+
+
+}

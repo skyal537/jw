@@ -1,0 +1,50 @@
+package com.study.data.service;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.study.common.exception.BizException;
+import com.study.data.dao.IDataDao;
+import com.study.data.vo.AreaVO;
+import com.study.data.vo.CityVO;
+import com.study.data.vo.ThemeVO;
+
+@Service
+public class DataServiceImp implements IDataService{
+	
+	@Autowired
+	private IDataDao dataDao; 
+
+	@Override
+	public List<CityVO> getCityListByTour(String code) throws BizException {
+		try {
+			return dataDao.getCityListByTour(code);
+		} catch (SQLException e) {
+			throw new BizException(e);
+		}
+	}
+
+	@Override
+	public List<AreaVO> getAreaList() throws BizException {
+		try {
+			return dataDao.getAreaList();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	@Override
+	public List<ThemeVO> getThemeList() throws BizException {
+		try {
+			return dataDao.getThemeList();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+}

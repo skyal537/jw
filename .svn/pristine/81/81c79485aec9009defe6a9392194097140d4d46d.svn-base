@@ -1,0 +1,189 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+	<% request.setCharacterEncoding("UTF-8"); %>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<title>쪽지함</title>
+</head>
+
+<body>
+
+	<%@include file="/WEB-INF/inc/top_menu.jsp" %>
+	
+<script type="text/javascript">
+
+	$(document).ready(function() {
+	   // 검색 및 페이징을 위한 폼 변수 정의 
+	   var f =  document.forms["frm_search_post"];
+		
+	   // 각 객체에 이벤트 정의 
+	   $('ul.pager a[data-page]').click(function(evt) {
+		   evt.preventDefault();	   
+		   page = $(this).data('page');
+		   console.log("page", page)
+		   f.curPage.value = page;
+		   f.submit();
+		}); // $('ul.pager a[data-page]').click
+		
+		$('#id_rowSizePerPage').change(function(evt) {
+			evt.preventDefault();
+			size = this.value;
+			f.curPage.value = 1;
+			f.rowSizePerPage.value = size;
+			console.log("curPage",f.curPage.value,"rowSizePerPage",  f.rowSizePerPage.value);
+			f.submit();
+		}); // $('#id_rowSizePerPage').change
+	
+	}); // $(document).ready 
+
+</script>
+	
+<form method="post" name="frm_search_post" id="frm_search_post">
+	<input type="hidden" name="postGubun" value="${searchVO.postGubun}">
+	<input type="hidden" name="curPage" value="${searchVO.curPage }"  >
+	<input type="hidden" name="rowSizePerPage" value="${searchVO.rowSizePerPage }" >
+</form>
+	
+	
+<form action="postDelete.do">
+<input type="hidden" name="postGubun" value="${searchVO.postGubun}">
+
+<div class="container">
+	<div class="page-header">	
+		 <h2>쪽지함</h2>
+    </div>
+    
+	<div class="row">
+		
+		<div class="col-sm-2 form-inline" style="margin-bottom: 5px;">
+			전체 ${searchVO.totalRowCount} 건
+			<select id="id_rowSizePerPage" name="rowSizePerPage" class="form-control">
+				<option value="10" ${searchVO.rowSizePerPage eq 10 ? 'selected="selected"':"" }>10</option>
+				<option value="20" ${searchVO.rowSizePerPage eq 20 ? 'selected="selected"':"" }>20</option>
+				<option value="30" ${searchVO.rowSizePerPage eq 30 ? 'selected="selected"':"" }>30</option>
+				<option value="40" ${searchVO.rowSizePerPage eq 40 ? 'selected="selected"':"" }>40</option>
+				<option value="50" ${searchVO.rowSizePerPage eq 50 ? 'selected="selected"':"" }>50</option>
+			</select>
+		</div>
+<!-- col-sm-offset-5 col-sm-1 -->
+		<div class="col-sm-1 text-right" style="margin-bottom: 5px;" >
+			<a href="${pageContext.request.contextPath }/post/postList.do?postGubun=0" class="btn btn-sm btn-success" >받은쪽지함</a>
+		</div>
+		<div class="col-sm-1 text-right" style="margin-bottom: 5px;" >
+			<a href="${pageContext.request.contextPath }/post/postList.do?postGubun=1" class="btn btn-sm btn-success" >보낸쪽지함</a>
+		</div>
+		<div class="col-sm-1 col-sm-offset-6 text-right" style="margin-bottom: 5px;" >
+			<a href="${pageContext.request.contextPath }/post/postForm.do" class="btn btn-sm btn-warning" >쪽지보내기</a>
+		</div>
+		<div class="col-sm-1 text-right" style="margin-bottom: 5px;" >
+			<button type="submit" class="btn btn-sm btn-danger">선택삭제</button>
+<%-- 			<a href="${pageContext.request.contextPath }/post/postDelete.do" class="btn btn-sm btn-danger" >선택삭제</a> --%>
+		</div>
+	</div>
+	
+	
+    
+   <table class="table table-bordered table-striped">
+       <colgroup>
+           <col style="width: 5%;">
+           <col style="width: 10%;">
+           <col style="width: 10%;">
+           <col style="width: 10%;">
+           <col style=/>
+           <col style="width: 15%;">
+           <col style="width: 10%;">
+       </colgroup>
+       
+       <tr class="text-center">
+       	<td><input type="checkbox" name="postCheckAll" id="postCheckAll" onclick="checkAll();"/></td>
+           <td>NO</td>
+           <td>보낸이</td>
+           <td>받는이</td>
+           <td>제 목</td>
+           <td>날 짜</td>
+           <td>답 장</td>
+       </tr>
+
+		<c:choose>
+			<c:when test="${post eq null or empty post }">
+				<tr><td colspan="7">조회결과가 없습니다.</td></tr>
+			</c:when>
+			<c:otherwise>
+				<c:forEach var="vo" items="${post }" varStatus="i">
+					<c:url var="postListUrl" value="/post/postView.do">
+						<c:param name="postId" value="${vo.postId }"></c:param>
+					</c:url>
+					<tr class="text-center">
+						<td><input type="checkbox" name="postCheckRow" value="${vo.postId }"></td>
+						<td><c:out value="${vo.postId }" /></td>
+						<td><c:out value="${vo.memIdSend }" /></td>
+						<td><c:out value="${vo.memIdArrv }" /></td>
+						<td style="text-align: left;">
+							<a href="postView.do?postId=${vo.postId}"><c:out value="${vo.postTitle }"/></a>
+						</td>
+						<td><c:out value="${vo.postRegDate }" /></td>
+						<td><a href="<c:out value="${postFormUrl }"/>">답 장</a></td>
+					</tr>
+				</c:forEach>
+			</c:otherwise>
+		</c:choose>
+   </table>
+
+<script type="text/javascript">
+
+// 체크박스 전체선택, 전체해제
+	function checkAll(){
+	    if( $("#postCheckAll").is(':checked') ){
+	      $("input[name=postCheckRow]").prop("checked", true);
+	    }else{
+	      $("input[name=postCheckRow]").prop("checked", false);
+	    }
+	}
+
+</script>
+   
+	
+<nav>
+	<ul class="pager">
+
+		<!-- 이전 페이지 -->
+		<li>
+			<a href="postList.do?curPage=${(searchVO.firstPage ne 1) ? searchVO.firstPage-1 : 1}&postGubun=${searchVO.postGubun}"
+				data-page="${searchVO.firstPage-1}" aria-label="Previous">
+			<span aria-hidden="true">&larr;</span></a>
+	   </li>
+
+		<!-- 이전 페이지 하나씩-->
+		<li>
+			<a href="postList.do?curPage=${searchVO.curPage>1 ? searchVO.curPage-1 : 1}&postGubun=${searchVO.postGubun}" data-page="${searchVO.curPage-1}"  aria-label="Previous">
+			<span aria-hidden="true">&laquo;</span></a>
+		</li>
+
+		<!-- 페이지 넘버링 -->
+		<c:forEach var="i" begin="${searchVO.firstPage}" end="${searchVO.lastPage}">
+			<c:if test="${searchVO.curPage==i}"><li class="active"><a href="#" class="alink">${i}</a></c:if>
+			<c:if test="${searchVO.curPage ne i}"><li><a href="postList.do?curPage=${i}&postGubun=${searchVO.postGubun}" class="alink" data-page="${i}" >${i}</a></c:if>
+		</c:forEach>
+
+		<!-- 다음 페이지 하나씩 -->
+		<li>
+			<a href="postList.do?curPage=${searchVO.curPage<searchVO.totalPageCount?(searchVO.curPage+1):searchVO.totalPageCount}&postGubun=${searchVO.postGubun}"
+				data-page="${searchVO.curPage+1}" aria-label="Next">
+			<span aria-hidden="true">&raquo;</span></a>
+		</li>
+
+		<!-- 마지 페이지 -->
+		<li>
+			<a href="postList.do?curPage=${searchVO.lastPage<searchVO.totalPageCount?(searchVO.lastPage+1):searchVO.totalPageCount}&postGubun=${searchVO.postGubun}"
+				data-page="${searchVO.lastPage+1}" aria-label="Next">
+			<span aria-hidden="true">&rarr;</span></a>
+	  	</li>
+	</ul>
+</nav>
+
+</div>
+</form>
+</body>
+</html>

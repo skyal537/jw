@@ -1,0 +1,80 @@
+package com.study.tour.web;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.study.tour.service.ITourService;
+import com.study.tour.vo.PackSearchVO;
+import com.study.tour.vo.PackageVO;
+import com.study.tour.vo.ProdSearchVO;
+import com.study.tour.vo.ProductVO;
+
+@Controller
+@RequestMapping("/tour")
+public class TourController {
+
+	@Autowired
+	ITourService tourService;
+	
+	@RequestMapping("/tPackList.do")
+	public String tPackList(ModelMap model,PackSearchVO searchVO) {
+		
+		List<PackageVO> pack = tourService.getPackageList(searchVO);
+		//System.out.println(pack.);
+		
+		model.addAttribute("searchVO", searchVO);
+		model.addAttribute("list", pack);
+		return "tour/tPackList";
+	}
+	
+	@RequestMapping("/tProdList.do")
+	public String tProdList(ModelMap model,PackSearchVO searchVO, String packageId) {
+		List<ProductVO> prod = tourService.getProdList(packageId);	//검색했을때는 빈이랑 파라미터랑 충돌??체크
+		model.addAttribute("list", prod);
+		
+		return "tour/tProdList";
+	}
+	
+	@RequestMapping("/tProdView.do")
+	public String tProdView(String prodId, ModelMap model) {
+		ProductVO product =tourService.getProduct(prodId);
+		model.addAttribute("product", product);
+		return "tour/tProdView";
+	}
+	
+	@RequestMapping("/tPackMg")
+	public String tPackMg(PackSearchVO searchVO, ModelMap model) {
+		List<PackageVO> pack = tourService.getPackageList(searchVO);
+		
+		model.addAttribute("list", pack);
+		return "tour/tPackMg";
+	}
+	
+	@RequestMapping("/tProdMg.do")
+	public String tProdMg(ProdSearchVO searchVO, ModelMap model, String packageId) {
+		List<ProductVO> prod = tourService.getProdList(packageId);
+		model.addAttribute("list", prod);
+		return "tour/tProdMg";
+	}
+	
+	@RequestMapping("/tProdForm.do")
+	public String tProdForm() {
+		return "tour/tProdForm";
+	}
+	
+	@RequestMapping("/tProdRegist.do")
+	public String tProdRegist(ProductVO product) {
+		tourService.registProduct(product);
+		return "tour/tProdMg";
+	}
+	
+	@RequestMapping("/tProdModify.do")
+	public String tProdModify(ProductVO product) {
+		tourService.updateProduct(product);
+		return "tour/tProdMg";
+	}
+}

@@ -1,0 +1,121 @@
+package com.study.common.vo;
+
+import java.io.Serializable;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+//회원
+public class CMemberVO implements Serializable{
+
+	private static final long serialVersionUID = 1L;
+
+	private String memId;       /*회원아이디*/
+	private String memPass;     /*비밀번호*/
+	private String memName;     /*회원이름*/
+	private String memBir;  	 /*생년월일*/
+	private int   memHp;        /*핸드폰번호*/
+	private String memMail;     /*이메일*/
+	private String memAddr;     /*주소1*/
+	private String memAddr2;	 /*주소2*/
+	private String memSex;      /*성별*/
+	private int authCode;	     /*권한코드*/
+	private String areaCode;    /*지역코드*/
+	private String countryId;	 /*나라아이디*/
+	private String themeCode;	 /*테마코드*/
+	private String memDelYn;	 /*탈퇴여부*/
+
+
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
+
+	public String getMemId() {
+		return memId;
+	}
+	public void setMemId(String memId) {
+		this.memId = memId;
+	}
+	public String getMemPass() {
+		return memPass;
+	}
+	public void setMemPass(String memPass) {
+		this.memPass = memPass;
+	}
+	public String getMemName() {
+		return memName;
+	}
+	public void setMemName(String memName) {
+		this.memName = memName;
+	}
+	public String getMemBir() {
+		return memBir;
+	}
+	public void setMemBir(String memBir) {
+		this.memBir = memBir;
+	}
+	public int getMemHp() {
+		return memHp;
+	}
+	public void setMemHp(int memHp) {
+		this.memHp = memHp;
+	}
+	public String getMemMail() {
+		return memMail;
+	}
+	public void setMemMail(String memMail) {
+		this.memMail = memMail;
+	}
+	public String getMemAddr() {
+		return memAddr;
+	}
+	public void setMemAddr(String memAddr) {
+		this.memAddr = memAddr;
+	}
+	public String getMemAddr2() {
+		return memAddr2;
+	}
+	public void setMemAddr2(String memAddr2) {
+		this.memAddr2 = memAddr2;
+	}
+	public String getMemSex() {
+		return memSex;
+	}
+	public void setMemSex(String memSex) {
+		this.memSex = memSex;
+	}
+	public int getAuthCode() {
+		return authCode;
+	}
+	public void setAuthCode(int authCode) {
+		this.authCode = authCode;
+	}
+	public String getAreaCode() {
+		return areaCode;
+	}
+	public void setAreaCode(String areaCode) {
+		this.areaCode = areaCode;
+	}
+	public String getCountryId() {
+		return countryId;
+	}
+	public void setCountryId(String countryId) {
+		this.countryId = countryId;
+	}
+	public String getThemeCode() {
+		return themeCode;
+	}
+	public void setThemeCode(String themeCode) {
+		this.themeCode = themeCode;
+	}
+	public String getMemDelYn() {
+		return memDelYn;
+	}
+	public void setMemDelYn(String memDelYn) {
+		this.memDelYn = memDelYn;
+	}
+
+
+
+
+}

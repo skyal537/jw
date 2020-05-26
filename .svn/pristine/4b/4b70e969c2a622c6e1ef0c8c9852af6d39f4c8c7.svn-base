@@ -1,0 +1,50 @@
+package com.study.post.service;
+
+import com.study.common.exception.BizException;
+
+public interface IPostService {
+	
+	/**
+	 * 쪽지 목록 조회
+	 * @param
+	 * @return 
+	 * @throws BizException
+	 */
+	public void getPostList() throws BizException;
+
+	/**
+	 * 쪽지 확인하기
+	 * @param 
+	 * @return 
+	 * @throws BizException 
+	 */
+	public void getPostCheck() throws BizException ;
+	
+	/**
+	 * 쪽지 보내기(등록)
+	 * @param
+	 * @return 
+	 * @throws BizException
+	 */
+	public void getPostSend() throws BizException;
+		
+	/**
+	 * 답장 보내기
+	 * @param
+	 * @return 
+	 * @throws BizException
+	 */
+	public void getPostAnswerSend() throws BizException;
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+}

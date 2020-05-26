@@ -1,0 +1,90 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/bxslider/4.2.12/jquery.bxslider.min.js"></script>
+
+  <script>
+    $(document).ready(function(){
+      $('.bxslider').bxSlider({
+    	  auto: true,
+    	  speed: 500,
+    	  pause: 5000,
+    	  mode: 'horizontal',
+    	  autoControls: true, 
+    	  pager: true,
+    	  captions: true,
+      });
+    });
+  </script>
+	<title></title>
+</head>
+<body>
+	<%@include file="/WEB-INF/inc/top_menu.jsp" %>
+<div class="container">
+		<h1>${product.productName}</h1>
+		<div>${product.productId}</div>
+		<ul class="bxslider">
+			<c:forEach var="vo" items="${cal}">
+					<li><a><img alt="" src="${vo.spotPic}" width="300px"></a></li>
+			</c:forEach> 
+		</ul>
+		<br>
+		<table class="grid table table-bordered table-striped hover ">
+			<tr>
+				<td>여행기간</td>
+				<td colspan="4">${product.packagePeriod}</td>
+			</tr>
+			<tr>
+				<td rowspan="2">이용 교통</td>
+				<td colspan="4">${product.airLineNm}</td>
+			</tr>
+			<tr>
+				<td>${product.airStart}</td>
+				<td>${product.startDate}</td>
+				<td>${product.airEnd}</td>
+				<td>${product.endDate}</td>
+			</tr>
+		</table>
+		<br>
+		<table class="grid table table-bordered table-striped hover ">
+			<tr>
+				<th>성인</th>
+				<th>아동</th>
+				<th>유아</th>
+			</tr>
+			<tr>
+				<td>${product.adultPrice}</td>
+				<td>${product.childPrice}</td>
+				<td>${product.babyPrice}</td>
+			</tr>
+		</table>
+		<br>
+		<div>
+			<pre>
+				${product.notice}
+			</pre>
+		</div>
+		
+		<c:forEach var="vo" items="${cal}">
+			<div class="panel panel-default">
+				<div><h2>${vo.day}일차</h2></div>
+				<div class="col-sm-offset-1">
+					<div><h4>${vo.calendarTitle}</h4></div>
+					<div>${vo.calendarContent}</div>
+					<c:if test="${not empty vo.spotPic}">
+						<div class="col-sm-offset-1">
+							<div>${vo.spotName }</div>
+							<div><img alt="" src="${vo.spotPic }" width="200px"></div>
+						</div>
+					</c:if>
+				</div>
+			</div>
+		</c:forEach>
+</div>	<!--콘테이너  -->
+</body>
+</html>

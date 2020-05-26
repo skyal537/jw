@@ -1,0 +1,71 @@
+package com.study.member.service;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.stereotype.Service;
+
+import com.study.common.exception.BizDuplicateException;
+import com.study.common.exception.BizException;
+import com.study.common.exception.BizRegistFailException;
+import com.study.member.dao.IMemberDao;
+import com.study.member.vo.MemberSearchVO;
+import com.study.member.vo.MemberVO;
+
+@Service
+public class MemberServiceImpl implements IMemberService {
+
+	@Autowired
+	private IMemberDao memberDao;
+
+	@Override
+	public List<MemberVO> getMemberMgList(MemberSearchVO searchVO) throws BizException {
+
+		int rowCount = memberDao.getMemberMgCount(searchVO);
+		searchVO.setTotalRowCount(rowCount);
+		searchVO.setting();
+
+		return memberDao.getMemberMgList(searchVO);
+	}
+
+	@Override
+	public MemberVO getMember(String memId) throws BizException {
+		MemberVO member = memberDao.getMember(memId);
+		
+		return member;
+	}
+
+	@Override
+	public void registMember(MemberVO member) throws BizException {
+		System.out.println(member.getMemName());
+		try {
+			int res = memberDao.registMember(member);
+			if(res < 1) {
+				throw new BizRegistFailException();
+			}
+		} catch (DuplicateKeyException e) {
+				throw new BizDuplicateException(e.getMessage(), e);
+		}
+	}
+
+	@Override
+	public void modifyMember(MemberVO member) throws BizException {
+
+		int res = memberDao.updateMember(member);
+		if(res < 1) {
+			throw new BizRegistFailException();
+		}
+		
+	}
+
+	@Override
+	public void removeMember(MemberVO member) throws BizException {
+
+		memberDao.deleteMember(member);
+	}
+
+
+
+}

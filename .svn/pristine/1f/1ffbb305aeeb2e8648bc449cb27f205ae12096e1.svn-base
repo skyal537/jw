@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <!-- freBoardMapper.xml -->
+  	<!-- name는 해당 인터페이스 완전한 이름을 사용 -->
+  	
+  	
+  	<mapper namespace="com.study.tour.dao.ITourDao">
+  	
+  		<select id="getPackCount"
+  							parameterType="com.study.tour.vo.PackSearchVO" 
+  							resultType="int">
+  					SELECT count(*) 
+						FROM  t_package
+  					
+  			</select>
+  	
+  			<select id="getPackageList"
+  							parameterType="com.study.tour.vo.PackSearchVO" 
+  							resultType="com.study.tour.vo.PackageVO">
+  					<include refid="common.PRE_PAGING_QRY"/>
+  					select * from t_package
+  					<include refid="common.POST_PAGING_QRY"/>
+  					
+  			</select>
+  			
+  			<select id="getProdList"
+  							parameterType="String" 
+  							resultType="com.study.tour.vo.ProductVO">
+  					select * 
+  					from t_product
+  					where package_Id = #{packageId}
+  					 
+  						
+  			</select>
+  			
+  			<select id="getProduct"
+  							parameterType="String" 
+  							resultType="com.study.tour.vo.ProductVO">
+  					select * 
+  					from t_product
+  					where product_Id = #{productId}
+  					 
+  						
+  			</select>
+  			
+  			<select id="getPackage"
+  							parameterType="String" 
+  							resultType="com.study.tour.vo.PackageVO">
+  					select * 
+  					from t_package
+  					where package_id = #{packageId}
+  					 
+  						
+  			</select>
+  			
+  			<insert id="registProduct" 
+  							parameterType="com.study.tour.vo.ProductVO">
+  					INSERT INTO t_product (
+										    product_id         , product_name      , start_date
+										    , end_date         , res_yn            , total_people
+										    , apply_people     , notice            , adult_price
+										    , child_price      , baby_price        , account
+										    , account_bank     , package_period    , air_start
+										    , air_end          , view_yn           , air_line_nm
+										    , package_id
+										) VALUES (
+										    #{productId}      , #{productName}  , #{startDate}
+										    , #{endDate}      , 'Y'    					, #{totalPeople}
+										    , 0    , #{notice}    , #{adultPrice}
+										    , #{childPrice}    , #{babyPrice}    , #{account}
+										    , #{accountBank}    , #{packagePeriod}    , #{airStart}
+										    , #{airEnd}    , 'N'    , #{airLineNm}
+										    , #{packageId}
+										)
+  			</insert>
+  			
+  			<update id="updateProduct"
+  								parameterType="com.study.tour.vo.ProductVO">
+  								UPDATE t_product
+										SET
+										    	product_id = 		#{productId}
+										    , product_name = 	#{productName}
+										    , start_date = 		#{startDate}
+										    , end_date = 			#{endDate}
+										    , res_yn = 				'Y'
+										    , total_people = 	#{totalPeople}
+										    , apply_people = 	#{applyPeople}
+										    , notice = 				#{notice}
+										    , adult_price = 	#{adultPrice}
+										    , child_price = 	#{childPrice}
+										    , baby_price = 		#{babyPrice}
+										    , account = 			#{account}
+										    , account_bank = 	#{accountBank}
+										    , package_period = #{packagePeriod}
+										    , air_start = 		#{airStart}
+										    , air_end = 			#{airEnd}
+										    , view_yn = 			#{viewYn}
+										    , air_line_nm = 	#{airLineNm}
+										    , package_id = 		#{packageId}
+										WHERE
+										    product_id = #{productId}
+  			</update>
+  			
+  			<delete id="removeProduct"
+  								parameterType="String">
+  				delete t_product
+  				where product_id = #{productId}
+  			</delete>
+  	</mapper>
+  	
+  	
+  	
+  	

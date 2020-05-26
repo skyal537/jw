@@ -1,0 +1,216 @@
+package com.study.tour.web;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.study.calendar.service.ICalendarService;
+import com.study.calendar.vo.CalendarVO;
+import com.study.data.service.IDataService;
+import com.study.data.vo.AreaVO;
+import com.study.data.vo.PackPeriodVO;
+import com.study.login.vo.UserVO;
+import com.study.tour.service.ITourService;
+import com.study.tour.vo.PackSearchVO;
+import com.study.tour.vo.PackageVO;
+import com.study.tour.vo.ProdSearchVO;
+import com.study.tour.vo.ProductVO;
+
+@Controller
+@RequestMapping("/tour")
+public class TourController {
+	
+	private final Logger logger = LoggerFactory.getLogger(getClass());
+
+
+	@Autowired
+	ITourService tourService;
+	
+	@Autowired
+	ICalendarService calService;
+	
+	@Autowired
+	IDataService dataService;
+	
+	@RequestMapping("/tPackList.do")
+	public String tPackList(ModelMap model,PackSearchVO searchVO, HttpSession session) {
+		UserVO user = (UserVO)session.getAttribute("USER_INFO");
+		if(user.getAuthCode()<2) {
+			searchVO.setSearchAuth("N");	//운영자이상
+		} else if(user.getAuthCode()>1) {
+			searchVO.setSearchAuth("Y");	//회원
+		}
+		System.out.println("권한YN" +searchVO.getSearchAuth());
+		
+		
+		List<PackageVO> pack = tourService.getPackageList(searchVO);
+		//System.out.println(pack.);
+		
+		model.addAttribute("searchVO", searchVO);
+		model.addAttribute("list", pack);
+		List<AreaVO> area = dataService.getAreaList();
+		model.addAttribute("areaList", area);
+		
+		
+		List<PackPeriodVO> packPeriod = dataService.getPackPeriod();
+		model.addAttribute("periodList", packPeriod);
+		
+		
+		
+		return "tour/tPackList";
+	}
+	
+	
+	@RequestMapping("/tPackForm.do")
+	public String tPackForm() {
+		
+		
+		return "tour/tPackForm";
+	}
+	
+	
+	@RequestMapping("/tPackRegist.do")
+	public String tPackRegist(ModelMap model,PackageVO pack, RedirectAttributes redirect) {
+		logger.debug("package : {}", pack);
+		tourService.registPackage(pack);
+		
+		redirect.addAttribute("packageId", pack.getPackageId());
+		return "redirect:/tour/tProdList.do";
+	}
+	
+	@RequestMapping("/tPackEdit.do")
+	public String tPackEdit(ModelMap model,String packageId) {
+		logger.debug("packageId : {}", packageId);
+		PackageVO pack =  tourService.getPackage(packageId);
+		model.addAttribute("pack", pack);
+		return "tour/tPackEdit";
+	}
+	
+	@RequestMapping("/tPackModify.do")
+	public String tPackModify(ModelMap model,PackageVO pack, RedirectAttributes redirect) {
+		logger.debug("package : {}", pack);
+		tourService.updatePackage(pack);
+		
+		redirect.addAttribute("packageId", pack.getPackageId());
+		return "redirect:/tour/tProdList.do";
+	}
+	
+	@RequestMapping("/tPackDelete.do")
+	public String tPackDelete(ModelMap model,String packageId, RedirectAttributes redirect) {
+		logger.debug("packageId : {}", packageId);
+		tourService.removePackage(packageId);
+		
+		redirect.addAttribute("packageId", packageId);
+		return "redirect:/tour/tProdList.do";
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	@RequestMapping("/tProdList.do")
+	public String tProdList(ModelMap model,ProdSearchVO searchVO, HttpSession session) {
+		UserVO user = (UserVO)session.getAttribute("USER_INFO");
+		if(user.getAuthCode()<2) {
+			searchVO.setSearchAuth("N");	//운영자이상
+		} else if(user.getAuthCode()>1) {
+			searchVO.setSearchAuth("Y");	//회원
+		}
+		
+		
+		
+		List<ProductVO> prod = tourService.getProdList(searchVO);	//검색했을때는 빈이랑 파라미터랑 충돌??고려
+		model.addAttribute("list", prod);
+		PackageVO pack = tourService.getPackage(searchVO.getPackageId());
+		model.addAttribute("pack", pack);
+		
+
+		return "tour/tProdList";
+	}
+	
+	@RequestMapping("/tProdView.do")
+	public String tProdView(String productId, ModelMap model) {
+		ProductVO product =tourService.getProduct(productId);
+		List<CalendarVO> calList = calService.getCalendarList(productId);
+		model.addAttribute("product", product);
+		model.addAttribute("cal", calList);
+		return "tour/tProdView";
+	}
+	
+	@RequestMapping("/tProdDelete")
+	public String tProdDelete(String productId, String packageId, ModelMap model
+														, RedirectAttributes redirect) {
+		tourService.removeProduct(productId);
+		calService.removeChildCal(productId);
+		
+		redirect.addAttribute("packageId", packageId);
+		return "redirect:/tour/tProdList.do";
+	}
+	
+	@RequestMapping("/tProdSelDelete")
+	public String tProdSelDelete(String[] prods, String packageId,
+												ModelMap model, RedirectAttributes redirect) {
+		tourService.removeSelProduct(prods);
+		
+		redirect.addAttribute("packageId", packageId);
+		return "redirect:/tour/tProdList.do";
+	}
+	
+	@RequestMapping("/tProdEdit.do")
+	public String tProdEdit(ModelMap model, String productId, PackSearchVO searchVO) {
+		ProductVO product =tourService.getProduct(productId);
+		PackageVO pack = tourService.getPackage(product.getPackageId());
+		List<CalendarVO> calList = calService.getCalendarList(productId);
+		model.addAttribute("prod", product);
+		model.addAttribute("pack", pack);
+		model.addAttribute("cal", calList);
+		
+		return "tour/tProdEdit";
+	}
+	
+	@RequestMapping("/tProdForm.do")
+	public String tProdForm(String packageId, ModelMap model) {
+		PackageVO pack = tourService.getPackage(packageId);
+		model.addAttribute("pack", pack);
+
+		
+		return "tour/tProdForm";
+	}
+	
+	@RequestMapping("/tProdRegist.do")
+	public String tProdRegist(ProductVO product, RedirectAttributes redirect) {
+		logger.debug("product : {}", product);
+
+		tourService.registProduct(product);
+		redirect.addAttribute("packageId", product.getPackageId());
+		return "redirect:/tour/tProdList.do";
+	}
+	
+	@RequestMapping("/tProdModify.do")
+	public String tProdModify(ProductVO product, RedirectAttributes redirect) {
+		logger.debug("product : {}", product);
+		tourService.updateProduct(product);
+		
+		redirect.addAttribute("packageId", product.getPackageId());
+		return "redirect:/tour/tProdList.do";
+	}
+}

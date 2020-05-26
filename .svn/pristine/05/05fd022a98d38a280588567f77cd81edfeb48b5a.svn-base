@@ -1,0 +1,14 @@
+package com.study.data.dao;
+
+import java.sql.SQLException;
+import java.util.List;
+
+import org.apache.ibatis.annotations.Mapper;
+
+import com.study.data.vo.CityVO;
+
+@Mapper
+public interface IDataDao {
+	List<CityVO> getCityListByTour(String code) throws SQLException;
+
+}

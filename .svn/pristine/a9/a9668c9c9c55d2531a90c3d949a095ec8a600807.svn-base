@@ -1,0 +1,184 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
+
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+	<title></title>
+	
+
+
+</head>
+<body>
+	<%@include file="/WEB-INF/inc/top_menu.jsp" %>
+	
+	
+
+	
+	
+	
+	
+	
+	
+	
+<div class="container">
+	<form action="tProdSelDelete.do">
+		<c:if test="${sessionScope.USER_INFO.authCode <= 1 }">
+		<div class="panel panel-default">
+		  <div class="panel-body">
+	  		<a href="tPackForm.do" class="btn btn-sm btn-default ">
+					여행패키지 작성
+				</a>
+				<a href="tPackEdit.do?packageId=${pack.packageId}" class="btn btn-sm btn-default ">
+					여행패키지 수정
+				</a>
+				<a href="tPackDelete.do?packageId=${pack.packageId}" class="btn btn-sm btn-default ">
+					여행패키지 삭제
+				</a>
+		  		
+			  <a href="tProdForm.do?packageId=${pack.packageId}" class="btn btn-sm btn-default ">
+					새상품 작성
+				</a>
+				<input type="hidden" value="${pack.packageId}" name="packageId">
+				<button type="submit" class="btn btn-sm btn-default">선택 상품 삭제</button>
+		  </div>
+	  </div>
+	  
+	  </c:if>
+	  
+	  
+	  
+	  
+	  
+	  
+	  
+	  <table class="grid table table-bordered table-striped hover ">
+				<colgroup>
+					<col width="10%"/>
+					<col width=""/>
+					<col width="15%"/>
+					<col width="15%"/>
+				</colgroup>
+				<tr class="text-center">
+					<td rowspan="3">
+						<img	src="${pack.packagePic}"
+						alt="" width="150">
+						
+					</td>
+					<td>${pack.packageId}</td>
+					<td>평점:<c:forEach varStatus="status" begin="1" end="${pack.packageGrade}">★</c:forEach></td>
+					<td rowspan="3">
+						가격 : <fmt:formatNumber value="${pack.adultPrice}" pattern="#,###"/> 원
+					</td>
+				</tr>
+				<tr class="text-center">
+					<td colspan="2"><a href="tProdList.do?packageId=${pack.packageId}">${pack.packageName} </a> </td>
+				</tr>
+				<tr class="text-center">
+					<td >
+						여행기간: ${pack.packageDepPeriod1} ~ ${pack.packageDepPeriod2} 
+					</td>
+					<td>${pack.packagePeriod}</td>
+				</tr>
+			</table>
+			
+			
+			
+			
+			
+
+
+		
+		<table class="grid table table-bordered table-striped hover ">
+			<colgroup>
+				<col width="4%">
+				<col width="10%">
+				<col width="10%">
+				<col width="10%">
+				<col width="8%">
+				<col width="7%">
+				<col />
+				<col width="5%">
+				<col width="5%">
+				<col width="5%">
+				<col width="5%">
+				
+			</colgroup>
+		
+			<tr class="text-center">
+				<c:if test="${sessionScope.USER_INFO.authCode <= 1 }">
+					<td>체크</td>
+					<td>패키지아이디</td>
+					<td>상품아이디</td>
+				</c:if>
+					<td>출발/도착 일시</td>
+					<td>항공사</td>
+					<td>기간</td>
+					<td>상품명</td>
+					<td>가격</td>
+					<td>인원</td>
+				<c:if test="${sessionScope.USER_INFO.authCode <= 1 }">
+					<td>예약상태</td>
+					<td>수정</td>
+				</c:if>
+			</tr>
+			
+			<c:forEach var="vo" items="${list}">
+				<tr class="text-center">
+				<c:if test="${sessionScope.USER_INFO.authCode <= 1 }">
+					<td>
+ 						<input type="checkbox" name="prods" value="${vo.productId}">
+					</td>
+					<td>
+ 						${fn:substring(vo.productId,0,7)}	
+					</td>
+					<td>
+						${vo.productId}
+					</td>
+				</c:if>
+					<td>
+						${fn:substring(vo.startDate,0,10)}	
+						<br> 
+						${fn:substring(vo.endDate,0,10)}	
+					</td>
+					<td>
+						${vo.airLineNm}
+					</td>
+					<td>${vo.packagePeriod}</td>
+					<td><a href="tProdView.do?productId=${vo.productId}">${vo.productName}</a> 
+					</td>
+					<td>
+					<fmt:formatNumber value="${vo.adultPrice}" pattern="#,###"/>
+					</td>
+					<td>
+						총:${vo.totalPeople}<br>
+						현:${vo.applyPeople}
+					</td>
+					<c:if test="${sessionScope.USER_INFO.authCode <= 1 }">
+					<td>
+						<a href="${pageContext.request.contextPath }/res/resMg.do?searchType=C&searchWord=${vo.productId}" class="btn btn-sm btn-default" >예약상태</a>
+					</td>
+					<td>
+						<a href="tProdEdit.do?productId=${vo.productId}" class="btn btn-sm btn-default" >수정</a>
+						<a href="tProdDelete.do?productId=${vo.productId}&packageId=${vo.packageId}" class="btn btn-sm btn-default" >삭제</a>
+					</td>
+					</c:if>
+				</tr>
+			</c:forEach>
+			
+		</table>
+		</form>
+</div>
+
+
+
+
+
+
+
+</body>
+</html>

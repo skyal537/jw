@@ -1,0 +1,72 @@
+package com.study.post.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.study.common.exception.BizException;
+import com.study.post.dao.IPostDao;
+import com.study.post.vo.PostVO;
+
+@Service
+public class PostServiceImpl implements IPostService {
+
+	@Autowired
+	private IPostDao postDao;
+	
+	 
+	
+	/**
+	 * 쪽지 목록 조회
+	 * @param
+	 * @return List<PostVO>
+	 * @throws BizException
+	 */
+	@Override
+	public List<PostVO> getPostList() throws BizException {
+		
+		
+		return postDao.getList();
+	}
+
+	
+	/**
+	 * 쪽지 확인하기
+	 * @param 
+	 * @return 
+	 * @throws BizException 
+	 */
+	@Override
+	public void getPostCheck() throws BizException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
+	/**
+	 * 쪽지 보내기(등록)
+	 * @param
+	 * @return 
+	 * @throws BizException
+	 */
+	@Override
+	public void getPostSend() throws BizException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	
+	/**
+	 * 답장 보내기
+	 * @param
+	 * @return 
+	 * @throws BizException
+	 */
+	@Override
+	public void getPostAnswerSend() throws BizException {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

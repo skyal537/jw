@@ -1,0 +1,130 @@
+package com.study.res.web;
+
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.study.login.vo.UserVO;
+import com.study.member.service.IMemberService;
+import com.study.member.vo.MemberVO;
+import com.study.res.service.IResService;
+import com.study.res.vo.ResSearchVO;
+import com.study.res.vo.ReserveTest;
+import com.study.res.vo.ReserveVO;
+import com.study.res.vo.TouristVO;
+import com.study.tour.service.ITourService;
+import com.study.tour.vo.ProductVO;
+
+@Controller
+@RequestMapping("/res")
+public class ResController {
+	private final Logger logger = LoggerFactory.getLogger(getClass());
+	
+	@Autowired
+	IResService resService;
+	
+	@Autowired
+	ITourService tourService;
+	
+	@Autowired
+	IMemberService memberService;
+
+//	@RequestMapping("/resForm.do")
+//	public String form() {
+//		System.out.println("--resform controller--");
+//		return "res/resForm";
+//	}
+
+	
+	
+	@RequestMapping("/resList.do")
+	public String resList(ModelMap model, HttpSession session) {
+		logger.debug("searchVO = {}");
+		UserVO user = (UserVO)session.getAttribute("USER_INFO");
+		//System.out.println(user.getUserId());
+		List<ReserveVO> list=resService.getUserRes(user);
+		/*
+		 * UserVO user = (UserVO)session.getAttribute("USER_INFO"); MemberVO member =
+		 * memberService.getMember(user.getUserId());
+		 */
+		logger.debug("reserve = {}",list);
+		model.addAttribute("list", list);
+//		model.addAttribute("searchVO", searchVO);
+//		model.addAttribute("member", member);
+	
+		
+		return "res/resList";
+	}
+	
+	
+	@RequestMapping("/resMg.do")
+	public String resMg(ModelMap model, ResSearchVO searchVO) {
+		logger.debug("searchVO = {}",searchVO);
+		List<ReserveVO> reserve=resService.getResList(searchVO);
+		
+		logger.debug("reserve = {}",reserve);
+		model.addAttribute("resList", reserve);
+		model.addAttribute("searchVO", searchVO);
+		
+		
+		return "res/resMg";
+	}
+	
+	@RequestMapping("/resView.do")
+	public String view(TouristVO tourist, ReserveVO res, ModelMap model) {
+	
+	model.addAttribute("tourlist", tourist);
+	model.addAttribute("res", res);
+	return "res/resView";
+	}
+	
+	
+	@RequestMapping("/resViewDetail.do")
+	public String viewDetail(TouristVO tourist, ReserveVO res, ModelMap model, ResSearchVO searchVO) {
+		List<ReserveVO> reserve=resService.getResList(searchVO);
+//		ReserveVO resId = resService.getRes(searchVO.getRes);
+		model.addAttribute("resList", reserve);
+		model.addAttribute("tourlist", tourist);
+		model.addAttribute("res", res);
+		return "res/resView";
+	}
+	
+	
+	
+	@RequestMapping("/resForm.do")
+	public String resForm(ModelMap model, ReserveVO reserve, TouristVO tourist, String productId, HttpSession session) {
+		UserVO user = (UserVO)session.getAttribute("USER_INFO");
+		MemberVO member = memberService.getMember(user.getUserId());
+		ProductVO prod=tourService.getProduct(productId);
+		List<TouristVO> tour = resService.getTourist(tourist);
+		model.addAttribute("tour", tour);
+		model.addAttribute("prod", prod);
+		model.addAttribute("member", member);
+		
+//		resService.insertTourist(tourist);
+		//resService.registList(reserve);
+		return "res/resForm";
+	}
+
+	@RequestMapping("/resRegist.do")
+	public String resRegist(ReserveVO reserve,HttpSession session) {
+		logger.debug("reserve = {}",reserve);
+		UserVO user = (UserVO)session.getAttribute("USER_INFO");
+		reserve.setMemId(user.getUserId());
+		logger.debug("reserve = {}",reserve);
+		
+		resService.registReserve(reserve);
+		
+		return "res/resView";
+	}
+	
+
+}

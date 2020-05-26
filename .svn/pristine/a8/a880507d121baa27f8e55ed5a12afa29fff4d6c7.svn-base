@@ -1,0 +1,14 @@
+package com.study.res.web;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping("/res")
+public class ResController {
+
+	
+	
+	
+	
+}

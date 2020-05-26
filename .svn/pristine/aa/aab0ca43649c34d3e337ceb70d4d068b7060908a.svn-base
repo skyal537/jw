@@ -1,0 +1,106 @@
+package com.study.login.web;
+
+import javax.servlet.http.HttpSession;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.study.common.exception.BizException;
+import com.study.common.exception.BizNotFoundException;
+import com.study.common.vo.ResultMessageVO;
+import com.study.login.vo.UserVO;
+import com.study.member.service.IMemberService;
+import com.study.member.vo.MemberVO;
+
+@Controller
+@RequestMapping("/login")
+public class LoginController {
+	
+	@Autowired
+	private IMemberService memberService;
+
+	
+	/**
+	 * 로그인 페이지 이동
+	 * @param
+	 * @return 
+	 * @throws BizException
+	 */
+	@RequestMapping(value = "/login.do", method = RequestMethod.GET)
+	public String login() throws BizException {
+
+		return "login/login";
+	}
+
+	
+	/**
+	 * 로그인 처리
+	 * @param userId
+	 * @param userPass
+	 * @param session
+	 * @param model
+	 * @return
+	 * @throws BizException
+	 */
+	@RequestMapping(value = "/login.do",  method = RequestMethod.POST)
+	public String loginProc(String userId, String userPass, HttpSession session, ModelMap model) throws BizException {
+
+		ResultMessageVO messageVO = null;
+
+		try {
+			MemberVO mem = memberService.getMember(userId);
+			
+			if(mem.getMemDelYn().equals("Y")) {
+				throw new BizNotFoundException();
+				
+			}
+			// 로그인 성공
+			if(mem.getMemPass().equals(userPass)) {
+
+				UserVO vo = new UserVO();
+				vo.setUserId(mem.getMemId());
+				vo.setUserName(mem.getMemName());
+				vo.setUserPass(mem.getMemPass());
+				vo.setAuthCode(mem.getAuthCode());
+				vo.setAuthNm(mem.getAuthNm());
+
+				session.setAttribute("USER_INFO", vo);
+				return "redirect:/index.jsp";
+
+			} else {	// 비번오류
+				messageVO = new ResultMessageVO().setResult(false)
+												 .setTitle("로그인 실패!!!")
+												 .setMessage("아이디/비밀번호를 확인해주세요.");
+			}
+		} catch (BizNotFoundException e) {
+			// 로그인 실패
+			messageVO = new ResultMessageVO().setResult(false)
+											 .setTitle("로그인 실패")
+											 .setMessage("해당 회원이 존재하지 않습니다.")
+											 .setUrl("/member/memberForm.do")
+											 .setUrlTitle("회원가입");
+			e.printStackTrace();
+		}
+		model.addAttribute("resultMessage", messageVO);
+		return "/common/message";
+	}
+
+	
+	/**
+	 * 로그아웃 처리
+	 * @param session
+	 * @return
+	 * @throws BizException
+	 */
+	@RequestMapping(value = "/logout.do", method = {RequestMethod.GET, RequestMethod.POST})
+	public String logout(HttpSession session) throws BizException {
+		//세션 무효화
+		session.invalidate();
+		return "redirect:/index.jsp";
+	}
+
+
+}

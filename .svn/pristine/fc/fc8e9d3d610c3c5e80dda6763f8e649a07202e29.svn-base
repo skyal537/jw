@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  
+  <!-- freBoardMapper.xml -->
+  	<!-- name는 해당 인터페이스 완전한 이름을 사용 -->
+  	
+  	<mapper namespace="com.study.calendar.dao.ICalendarDao">
+  			<select id="getCalendarList"
+  							parameterType="String"
+  							resultType="com.study.calendar.vo.CalendarVO">
+  				select * 
+  				from calendar
+  				where product_id = #{productId}
+  				order by day, step
+  			</select>
+  			
+  			
+  			
+  			<insert id="registCalendar"
+  								parameterType="com.study.calendar.vo.CalendarVO">
+  					INSERT INTO calendar (
+														    calendar_id
+														    , spot_id
+														    , day
+														    , calendar_title
+														    , calendar_content
+														    , product_id
+														    , step
+														    , spot_pic
+														    , spot_name
+														) VALUES (
+														    (select max(calendar_id)+1 from calendar)
+														    , #{spotId}
+														    , #{day}
+														    , #{calendarTitle}
+														    , #{calendarContent}
+														    , #{productId}
+														    , #{step}
+														    , (select spot_pic from spot where spot_id = #{spotId} )
+														    , (select spot_nm from spot where spot_id = #{spotId})
+														)
+  				</insert>
+  				
+  				<update id="updateCalendar"
+  								parameterType="com.study.calendar.vo.CalendarVO">
+  						UPDATE calendar
+								SET
+								     spot_id =               #{spotId}
+								    , day =                   #{day}
+								    , calendar_title =        #{calendarTitle}
+								    , calendar_content = 			#{calendarContent}
+								    , product_id =            #{productId}
+								    , step =                  #{step}
+								    , spot_pic =              (select spot_pic from spot where spot_id = #{spotId})
+								    , spot_name =             (select spot_nm from spot where spot_id = #{spotId})   
+							WHERE
+							    product_id = #{productId}
+							    and day =  #{day}
+							    and step = #{step}
+  				</update>
+  				
+  				<delete id="removeCalendar">
+  						delete calendar
+  						where calendar_id = #{calendarId}
+  				</delete>
+  				
+  				<delete id="removeChildCal" parameterType="String">
+  						delete calendar
+  						where product_id = #{productId}
+  				</delete>
+  	</mapper>
+  	
+  	
+  	
+  	

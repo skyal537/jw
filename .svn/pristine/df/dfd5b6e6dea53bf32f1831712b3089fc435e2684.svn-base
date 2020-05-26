@@ -1,0 +1,31 @@
+package com.study.post.web;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+@Controller
+@RequestMapping("/post")
+public class PostController {
+	
+	@RequestMapping("/postList.do")
+	public String postList() {		
+		return null;
+	}
+	
+	@RequestMapping("/postForm.do")
+	public String postForm() {			
+		return null;
+	}
+	
+	@RequestMapping("/postView.do")
+	public String postView() {				
+		return null;
+	}
+	
+	// 답장
+	@RequestMapping("/postAnswer.do")
+	public String postAnswer() {			
+		return null;
+	}
+
+}

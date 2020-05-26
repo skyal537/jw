@@ -1,0 +1,277 @@
+package com.study.res.web;
+
+import java.net.URLDecoder;
+import java.util.Arrays;
+import java.util.List;
+
+import javax.servlet.http.HttpSession;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import com.study.common.exception.BizRegistFailException;
+import com.study.common.vo.ResultMessageVO;
+import com.study.login.vo.UserVO;
+import com.study.member.service.IMemberService;
+import com.study.member.vo.MemberVO;
+import com.study.res.service.IResService;
+import com.study.res.vo.ResSearchVO;
+import com.study.res.vo.ReserveVO;
+import com.study.res.vo.TouristVO;
+import com.study.tour.service.ITourService;
+import com.study.tour.vo.ProductVO;
+
+@Controller
+@RequestMapping("/res")
+public class ResController {
+	private final Logger logger = LoggerFactory.getLogger(getClass());
+	
+	@Autowired
+	IResService resService;
+	
+	@Autowired
+	ITourService tourService;
+	
+	@Autowired
+	IMemberService memberService;
+
+//	@RequestMapping("/resForm.do")
+//	public String form() {
+//		System.out.println("--resform controller--");
+//		return "res/resForm";
+//	}
+
+	
+	
+	@RequestMapping("/resList.do")
+	public String resList(ModelMap model, HttpSession session) {
+		logger.debug("searchVO = {}");
+		UserVO user = (UserVO)session.getAttribute("USER_INFO");
+		//System.out.println(user.getUserId());
+		List<ReserveVO> list=resService.getUserRes(user);
+		/*
+		 * UserVO user = (UserVO)session.getAttribute("USER_INFO"); MemberVO member =
+		 * memberService.getMember(user.getUserId());
+		 */
+		logger.debug("reserve = {}",list);
+		model.addAttribute("list", list);
+//		model.addAttribute("searchVO", searchVO);
+//		model.addAttribute("member", member);
+	
+		
+		return "res/resList";
+	}
+	
+	
+	@RequestMapping("/resMg.do")
+	public String resMg(ModelMap model, ResSearchVO searchVO, ReserveVO res) {
+		logger.debug("searchVO = {}",searchVO);
+		List<ReserveVO> reserve=resService.getResList(searchVO);
+//		ReserveVO res = resService.updateReservePay();
+		logger.debug("reserve = {}",reserve);
+		model.addAttribute("resList", reserve);
+		model.addAttribute("searchVO", searchVO);
+//		model.addAttribute("res", res);
+
+		
+		return "res/resMg";
+	}
+	
+	@RequestMapping("/resView.do")
+	public String view(ReserveVO res, ModelMap model, ResSearchVO searchVO, String productId,TouristVO tourist, HttpSession session) {
+		ProductVO prod=tourService.getProduct(productId);
+		ReserveVO reserve = resService.getRes(res.getResId());
+		UserVO user = (UserVO)session.getAttribute("USER_INFO");
+		MemberVO member = memberService.getMember(user.getUserId());
+		tourist.setResId(res.getResId());
+		List<TouristVO> tour = resService.getTourist(tourist);
+		logger.debug("tour = {}",tour);
+
+		model.addAttribute("tour", tour);
+		model.addAttribute("res", reserve);
+		model.addAttribute("prod", prod);
+		model.addAttribute("member", member);
+		return "res/resView";
+	}
+	
+	
+	@RequestMapping("/resViewDetail.do")
+	public String viewDetail(ReserveVO res, ModelMap model, ResSearchVO searchVO, String productId,TouristVO tourist, HttpSession session ) {
+		ProductVO prod=tourService.getProduct(productId);
+		ReserveVO reserve = resService.getRes(res.getResId());
+		UserVO user = (UserVO)session.getAttribute("USER_INFO");
+		MemberVO member = memberService.getMember(user.getUserId());
+		tourist.setResId(res.getResId());
+		List<TouristVO> tour = resService.getTourist(tourist);
+		logger.debug("tour = {}",tour);
+
+		model.addAttribute("tour", tour);
+		model.addAttribute("res", reserve);
+		model.addAttribute("prod", prod);
+		model.addAttribute("member", member);
+		return "res/resViewDetail";
+	}
+	
+	//예약수정화면
+	@RequestMapping("/resModify.do")
+	public String modify(String resId, ReserveVO res,String productId, ModelMap model,HttpSession session,TouristVO tourist) {
+		logger.debug("resId : {}", resId);
+		ReserveVO reserve = resService.getRes(res.getResId());
+	
+		
+		
+		ProductVO prod=tourService.getProduct(productId);
+		UserVO user = (UserVO)session.getAttribute("USER_INFO");
+		MemberVO member = memberService.getMember(user.getUserId());
+		tourist.setResId(res.getResId());
+		List<TouristVO> tour = resService.getTourist(tourist);
+		logger.debug("tour = {}",tour);
+		
+		model.addAttribute("tour", tour);
+		model.addAttribute("res", reserve);
+		model.addAttribute("prod", prod);
+		model.addAttribute("member", member);
+		
+	
+		return "res/resModify";
+	}
+	
+	//예약수정하기 
+	@RequestMapping(value="/resModify.do",method = RequestMethod.POST)
+	public String modifyPost(ModelMap model, ReserveVO reserve, RedirectAttributes redirect) {
+//		logger.debug("reserve = {}",reserve);
+//		ProductVO prod=tourService.getProduct(productId);
+//		UserVO user = (UserVO)session.getAttribute("USER_INFO");
+//		reserve.setMemId(user.getUserId());
+//		List<TouristVO> tour = resService.getTourist(tourist);
+//		model.addAttribute("tour", tour);
+//		logger.debug("reserve = {}",reserve);
+//		resService.updateReserve(reserve);		
+//		model.addAttribute("prod", prod);
+		
+		
+		
+		logger.debug("reserve : {}", reserve);
+		resService.updateReserve(reserve);
+		
+		return "redirect:resViewDetail.do"; //상세보기로 리다이렉트	
+	
+	}
+	
+	@RequestMapping("/resForm.do")
+	public String resForm(ModelMap model, ReserveVO reserve, TouristVO tourist, String productId, HttpSession session) {
+		UserVO user = (UserVO)session.getAttribute("USER_INFO");
+		MemberVO member = memberService.getMember(user.getUserId());
+		ProductVO prod=tourService.getProduct(productId);
+		List<TouristVO> tour = resService.getTourist(tourist);
+		model.addAttribute("tour", tour);
+		model.addAttribute("prod", prod);
+		model.addAttribute("member", member);
+		
+//		resService.insertTourist(tourist);
+		//resService.registList(reserve);
+		return "res/resForm";
+	}
+
+	@RequestMapping(value = "/resRegist.do", method = RequestMethod.POST)
+	public String resRegist(ReserveVO reserve,HttpSession session,TouristVO tourist,ModelMap model,String productId) {
+		logger.debug("reserve = {}",reserve);
+		ProductVO prod=tourService.getProduct(productId);
+		UserVO user = (UserVO)session.getAttribute("USER_INFO");
+		reserve.setMemId(user.getUserId());
+		List<TouristVO> tour = resService.getTourist(tourist);
+		model.addAttribute("tour", tour);
+		logger.debug("reserve = {}",reserve);
+		resService.registReserve(reserve);
+		
+		model.addAttribute("prod", prod);
+		
+//		return "redirect:resViewDetail.do";
+		return "res/resViewDetail";
+//		return "redirect:resViewDetail.do";	
+	}
+	
+	@RequestMapping("/confirm.do")
+	public String confirm(String[] reserveIds,HttpSession session) {
+		logger.debug("reserveIds ={}",reserveIds);
+		ReserveVO reserve = new ReserveVO();
+		reserve.setReserveIds(Arrays.asList(reserveIds));
+		
+//		UserVO user = (UserVO)session.getAttribute("USER_INFO");
+//		reserve.setMemId(user.getUserId());
+//		logger.debug("reserve = {}",reserve);
+
+//		resService.registReserve(reserve);
+		resService.updateReservePay(reserve);
+		return "redirect:resMg.do";
+	}
+	
+	
+	@RequestMapping("/rescancel.do")
+	public String rescancel(String[] reserveIds,HttpSession session) {
+		logger.debug("reserveIds ={}",reserveIds);
+		ReserveVO reserve = new ReserveVO();
+		reserve.setReserveIds(Arrays.asList(reserveIds));
+		resService.updateReserveCancel(reserve);
+		return "redirect:resMg.do";
+	}
+	
+	
+	//삭제(취소)관련
+	@RequestMapping(value = "/resDelete.do")
+	public String freeDelete(ReserveVO reserve, ModelMap model) throws Exception {
+		try {
+			resService.removeBoard(reserve);
+			return "redirect:resList.do?msg=" + URLDecoder.decode("success", "utf-8");
+		} catch (BizRegistFailException e) {
+			e.printStackTrace();
+			ResultMessageVO message = new ResultMessageVO();
+			message.setResult(false)
+			.setTitle("삭제실패")
+			.setMessage("글이 존재하지 않거나 패스워드가 틀립니다")
+			.setUrl("/res/resList.do")
+			.setUrlTitle("목록으로");
+			
+			model.addAttribute("resultMessage", message);
+			return "common/message";
+		}
+	}
+	
+	
+	@RequestMapping(value = "/removeCheckedBoard.do")
+	public String removeCheckedBoard(String[] reserveIds) throws Exception{
+		logger.debug("reserveIds={}", reserveIds);
+		resService.removeCheckedBoard(reserveIds);
+		return "redirect:resList.do";
+	}
+	
+	//삭제(취소)관련
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+}

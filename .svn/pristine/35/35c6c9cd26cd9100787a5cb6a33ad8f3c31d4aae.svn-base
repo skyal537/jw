@@ -1,0 +1,5 @@
+package com.study.res.service;
+
+public interface IResService {
+	
+}

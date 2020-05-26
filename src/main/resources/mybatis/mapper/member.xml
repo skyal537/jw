@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+  <!-- member.xml -->
+  <!-- name는 해당 인터페이스 완전한 이름을 사용 -->
+
+<mapper namespace="com.study.member.dao.IMemberDao">
+
+	<sql id="whereSearchClause">
+		<if test="@org.apache.commons.lang3.StringUtils@isNotBlank(searchWord)
+			  and @org.apache.commons.lang3.StringUtils@isNotBlank(searchType)">
+			<choose>
+				<when test='searchType == "id"'>
+					AND mem_id LIKE '%' || #{searchWord} || '%'
+				</when>
+				<when test='searchType == "name"'>
+					AND mem_name LIKE '%' || #{searchWord} || '%'
+				</when>
+			</choose>
+		</if>
+	</sql>
+
+<!-- 회원 수 -->
+	<select id="getMemberMgCount"  parameterType="com.study.member.vo.MemberSearchVO" resultType="int">
+		SELECT count(*)
+		FROM  member
+		<where>
+			<include refid="whereSearchClause"/>
+		</where>
+	</select>
+	
+<!-- 회원리스트(관리자) -->
+	<select id="getMemberMgList" parameterType="com.study.member.vo.MemberSearchVO" resultType="com.study.member.vo.MemberVO">
+		<include refid="common.PRE_PAGING_QRY"/>
+			SELECT MEM_ID
+			    , MEM_PASS
+			    , MEM_NAME
+<!-- 			    , TO_CHAR(TO_DATE(MEM_BIR), 'YYYY-MM-DD') AS MEM_BIR  -->
+			    , TO_CHAR(SYSDATE, 'YYYY-MM-DD') AS MEM_BIR 
+			    , MEM_HP
+			    , MEM_MAIL
+			    , MEM_ADDR
+			    , MEM_ADDR2
+			    , MEM_SEX
+			    , AUTH_CODE
+			    , AREA_CODE
+			    , COUNTRY_ID
+			    , THEME_CODE
+			    , MEM_DEL_YN
+			    , MEM_REG_DATE
+				FROM MEMBER
+			<where>
+				<include refid="whereSearchClause"/>
+			</where>
+			ORDER BY MEM_REG_DATE DESC
+		<include refid="common.POST_PAGING_QRY"/>
+	</select>
+
+<!-- 회원조회 -->
+	<select id="getMember" parameterType="String" resultType="com.study.member.vo.MemberVO">
+		SELECT
+			A.MEM_ID
+			, A.MEM_PASS
+			, A.MEM_NAME
+			, A.MEM_BIR
+			, A.MEM_HP
+			, A.MEM_MAIL
+			, A.MEM_ADDR
+			, A.MEM_ADDR2
+			, A.MEM_SEX
+			, A.AUTH_CODE
+			, A.AREA_CODE
+			, A.COUNTRY_ID
+			, A.THEME_CODE
+			, A.MEM_DEL_YN
+			, B.AUTH_NM
+			, A.MEM_REG_DATE
+		FROM MEMBER A, AUTH B
+		WHERE A.AUTH_CODE = B.AUTH_CODE(+)
+		  AND A.MEM_ID = #{memId}
+	</select>
+	
+<!-- 회원가입처리 -->
+	<insert id="registMember" parameterType="com.study.member.vo.MemberVO" >
+		INSERT INTO MEMBER (
+		      mem_id         , mem_pass       , mem_name
+		    , mem_bir        , mem_hp         , mem_mail
+		    , mem_addr       , mem_addr2      , mem_sex
+		    , auth_code      , area_code      , theme_code     
+		    , mem_del_yn     , mem_reg_date
+		) VALUES (
+			  #{memId}         , #{memPass}     , #{memName}
+			, #{memBir}        , #{memHp}       , #{memMail}
+			, #{memAddr}       , #{memAddr2}    , #{memSex}
+			, 2                , #{areaCode}    ,#{themeCode}     
+			, 'N'              , TO_CHAR(sysdate, 'YYYY-MM-dd')
+		)
+	</insert>
+	
+<!-- 회원정보수정 -->
+	<update id="updateMember" parameterType="com.study.member.vo.MemberVO">
+		UPDATE MEMBER
+		   SET mem_name   = #{memName}
+			,  mem_bir    = #{memBir} 
+			,  mem_hp     = #{memHp}
+			,  mem_mail   = #{memMail}
+			,  mem_addr   = #{memAddr}
+			,  mem_addr2  = #{memAddr2}
+			,  mem_sex    = #{memSex}
+			,  auth_code  = #{authCode}  
+			,  area_code  = #{areaCode}  
+			,  theme_code = #{themeCode}     
+	 	WHERE mem_id      = #{memId}   
+		  AND mem_pass    = #{memPass}
+	</update>
+
+<!-- 회원 탈퇴 처리 -->
+	<delete id="deleteMember">
+		UPDATE MEMBER           
+		   SET mem_del_yn = 'Y'
+		 WHERE mem_id   = #{memId}   
+		   AND mem_pass = #{memPass}
+	</delete>
+
+
+</mapper>
+
+

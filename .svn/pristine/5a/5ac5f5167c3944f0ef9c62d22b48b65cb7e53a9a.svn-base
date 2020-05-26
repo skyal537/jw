@@ -1,0 +1,55 @@
+package com.study.res.vo;
+
+import java.io.Serializable;
+
+import org.apache.commons.lang3.builder.ToStringBuilder;
+
+import com.study.common.vo.PagingVO;
+
+public class ResSearchVO extends PagingVO implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	
+	private String searchType ;     // 검색구분 
+	private String searchWord ;			 // 검색어 
+	
+	// 20/04/17  이철우  :  사용자별 예약조회를 위해 추가함 
+	private String userId;  
+	
+	@Override
+	public String toString() {
+		return ToStringBuilder.reflectionToString(this);
+	}
+	
+	
+	public String getSearchType() {
+		return searchType;
+	}
+	public void setSearchType(String searchType) {
+		this.searchType = searchType;
+	}
+	public String getSearchWord() {
+		return searchWord;
+	}
+	public void setSearchWord(String searchWord) {
+		this.searchWord = searchWord;
+	}
+	public static long getSerialversionuid() {
+		return serialVersionUID;
+	}
+
+
+	public String getUserId() {
+		return userId;
+	}
+
+
+	public void setUserId(String userId) {
+		this.userId = userId;
+	}
+	
+	
+	
+}

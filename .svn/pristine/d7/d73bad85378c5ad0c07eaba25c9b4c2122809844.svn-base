@@ -1,0 +1,27 @@
+package com.study.tour.service;
+
+import java.util.List;
+
+import com.study.common.exception.BizException;
+import com.study.tour.vo.PackSearchVO;
+import com.study.tour.vo.PackageVO;
+import com.study.tour.vo.ProdSearchVO;
+import com.study.tour.vo.ProductVO;
+
+public interface ITourService {
+	public List<PackageVO> getPackageList(PackSearchVO searchVO) throws BizException;
+	public PackageVO getPackage(String packageId) throws BizException;
+	public void registPackage(PackageVO packageVO) throws BizException;
+	public void updatePackage(PackageVO packageVO) throws BizException;
+	public void removePackage(PackageVO packageVO) throws BizException;
+	
+	public List<ProductVO> getProdList(String productId) throws BizException;
+	public ProductVO getProduct(String productId) throws BizException;
+	public void registProduct(ProductVO product) throws BizException;
+	public void updateProduct(ProductVO product) throws BizException;
+	public void removeProduct(ProductVO product) throws BizException;
+	
+	
+	
+	
+}
